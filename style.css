@@ -1,0 +1,15 @@
+*{
+    background-color: black;
+}
+
+
+*::selection{
+    background-color: aliceblue;
+    color: black;
+}
+
+
+h1{
+    font-family: 'Times New Roman', Times, serif;
+    color: white;
+}
