@@ -9,7 +9,22 @@
 }
 
 
-h1{
+.navigation{
     font-family: 'Times New Roman', Times, serif;
     color: white;
+    display: inline-block;
+    
+}
+
+nav{
+    display: inline-block;
+}
+
+#Logo {
+    border: 3px white solid;
+    padding: 0px;
+
+    margin: 20 px;
+    display: inline-block;
+
 }
