@@ -13,7 +13,9 @@
     font-family: serif;
     color: #FFE8DB;
     display: inline-block;
-    margin-left: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    height: fit-content;
 }
 
 #Logo:hover{
@@ -36,20 +38,67 @@ nav{
     /* padding-right: 900px; */
     margin-right: 900px;
     margin-left: 50px;
+
+    height: fit-content;
     
     display: inline-block;
 }
 
 
 /* Main */
-
-
-
 #headline{
+
+    /* Box Organization */
+    width: 700px;
+    height: 30px;
+    margin-left: 300px;
+    margin-top: 200px;
+    margin-right: 352px;
+    font-size: xx-large;
+
+    /* Color */
     background-color: black;
     color: #FFE8DB;
     display: inline-block;
     font-size: x-large;
+}
 
+/* Start Button */
+#startTest{
+    width: 100px;
+    height: 30px;
+    margin-left: 600px;
+    margin-right: 600px;
+    border: 2px #FFE8DB solid;
+    border-radius: 4px;
 
+    /* Color */
+    background-color: #FFE8DB;
+
+    /* Text */
+    font-family: serif;
+
+}
+
+#startTest:hover{
+    background-color:#ffd2b8;
+    color: black;
+}
+
+/* Footer */
+
+#footer{
+    height: fit-content;
+    width: fit-content;
+    margin-top: 300px;
+    /* border: #FFE8DB 1px solid;
+    border-radius: 1px; */
+    margin-left: 564.935px;
+
+    /* Color */
+    color: #FFE8DB;
+}
+
+a {
+    text-decoration: none;
 }
