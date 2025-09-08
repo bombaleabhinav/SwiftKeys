@@ -103,3 +103,7 @@ a {
     text-decoration: none;
     color:#FFE8DB
 }
+
+a:hover{
+    color: #5682B1;
+}
