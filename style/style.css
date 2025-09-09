@@ -56,11 +56,16 @@ nav{
     margin-right: 352px;
     font-size: xx-large;
 
+    
+}
+
+h2{
     /* Color */
     background-color: black;
     color: #FFE8DB;
     display: inline-block;
     font-size: x-large;
+    
 }
 
 /* Start Button */
@@ -106,4 +111,12 @@ a {
 
 a:hover{
     color: #5682B1;
+}
+
+/* Contact Page */
+
+#ContactName{
+    height: auto;
+    width: auto;
+    margin-left: 1000px;
 }
