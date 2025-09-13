@@ -1,0 +1,120 @@
+/* Reset + Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*::selection{
+    color: black;
+    background-color: #5682B1;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #000;
+  color: #FFE8DB;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #000;
+}
+
+#Logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #FFE8DB;
+  text-decoration: none;
+}
+
+#Logo:hover {
+  color: #739EC9;
+}
+
+nav a {
+  margin: 0 10px;
+  font-size: 1rem;
+  text-decoration: none;
+  color: #FFE8DB;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #5682B1;
+}
+
+/* Main */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+#headline {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+#startTest {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: 2px solid #FFE8DB;
+  border-radius: 6px;
+  background: #FFE8DB;
+  color: #000;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#startTest:hover {
+  background: #5682B1;
+}
+
+/* Footer */
+#footer {
+  text-align: center;
+  padding: 1rem;
+  background: #000;
+  font-size: 0.9rem;
+}
+
+#footer a {
+  color: #FFE8DB;
+  text-decoration: none;
+}
+
+#footer a:hover {
+  color: #5682B1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 10px;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  #headline {
+    font-size: 1.5rem;
+  }
+  #startTest {
+    width: 100%;
+    max-width: 200px;
+  }
+}
