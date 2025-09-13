@@ -1,6 +1,7 @@
 # Swift keys
 **Swift Keys is a online platform to test your typing speed**
-
+---
+#Refer to the attached pdf for further info
 ---
 ![alt text](image.png)
 
