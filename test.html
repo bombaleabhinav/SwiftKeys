@@ -5,6 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Typing Test</title>
   <link rel="stylesheet" href="style/style.css">
+  <style>
+    #testContainer {
+      margin: 40px auto;
+      max-width: 800px;
+      text-align: center;
+    }
+    #wordBox {
+      background: #111;
+      color: #FFE8DB;
+      padding: 20px;
+      border-radius: 8px;
+      border: 2px solid #FFE8DB;
+      font-size: 1.5rem;
+      line-height: 2rem;
+      word-wrap: break-word;
+      margin-bottom: 20px;
+      position: relative;
+      min-height: 120px;
+    }
+    .char {
+      opacity: 0.5;
+    }
+    .correct {
+      color: #8fce00;
+      opacity: 1;
+    }
+    .incorrect {
+      color: #ff4c4c;
+      opacity: 1;
+      text-decoration: underline;
+    }
+    /* Fake blinking caret */
+    #caret {
+      display: inline-block;
+      width: 2px;
+      background: #FFE8DB;
+      animation: blink 1s step-start infinite;
+      position: relative;
+      top: 3px;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+    /* Hidden input */
+    #typingInput {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -17,11 +72,113 @@
   </header>
 
   <main>
-    <h2>Typing Test Coming Soon 🚀</h2>
+    <h2>🎵 Typing Test with Beats</h2>
+    <div id="testContainer">
+      <div id="wordBox"></div>
+      <!-- hidden input -->
+      <input type="text" id="typingInput" autofocus>
+      <div id="result"></div>
+    </div>
+
+    <audio id="song" src="sample.mp3"></audio>
   </main>
 
   <footer id="footer">
     Made with &hearts; by <a href="https://github.com/bombaleabhinav">Abhinav</a>
   </footer>
+
+  <script>
+    const lyrics = "Hello from the typing test you have to keep up with the rest as the music beats along type the lyrics word for word stay strong";
+    const song = document.getElementById("song");
+    const wordBox = document.getElementById("wordBox");
+    const typingInput = document.getElementById("typingInput");
+    const result = document.getElementById("result");
+
+    let chars = [];
+    let currentIndex = 0;
+    let caret;
+    let idleTimer;
+
+    function initTest() {
+      wordBox.innerHTML = "";
+      chars = [];
+      currentIndex = 0;
+      result.textContent = "";
+
+      lyrics.split("").forEach(c => {
+        const span = document.createElement("span");
+        span.textContent = c;
+        span.classList.add("char");
+        wordBox.appendChild(span);
+        chars.push(span);
+      });
+
+      // caret element
+      caret = document.createElement("span");
+      caret.id = "caret";
+      wordBox.insertBefore(caret, chars[0]);
+
+      typingInput.value = "";
+      typingInput.focus();
+      song.currentTime = 0;
+      song.pause();
+    }
+
+    function updateCaretPosition() {
+      if (currentIndex < chars.length) {
+        wordBox.insertBefore(caret, chars[currentIndex]);
+      } else {
+        wordBox.appendChild(caret);
+      }
+    }
+
+    function pauseSongInstantly() {
+      song.pause();
+    }
+
+    typingInput.addEventListener("input", () => {
+      const value = typingInput.value;
+
+      // Reset idle timer each time user types
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(pauseSongInstantly, 300);
+
+      // Start playing if typing
+      if (!song.paused) {
+        // already playing
+      } else if (value.length > 0) {
+        song.play();
+      }
+
+      chars.forEach((span, i) => {
+        const char = value[i];
+        if (char == null) {
+          span.classList.remove("correct", "incorrect");
+          span.classList.add("char");
+        } else if (char === span.textContent) {
+          span.classList.add("correct");
+          span.classList.remove("incorrect", "char");
+        } else {
+          span.classList.add("incorrect");
+          span.classList.remove("correct", "char");
+        }
+      });
+
+      currentIndex = value.length;
+      updateCaretPosition();
+
+      if (value.length === chars.length) {
+        song.pause();
+        result.textContent = "✅ Test Complete! Well done!";
+        typingInput.blur();
+      }
+    });
+
+    // Ensure typingInput always focused
+    document.addEventListener("click", () => typingInput.focus());
+
+    // Initialize test on load
+    initTest();
+  </script>
 </body>
 </html>
