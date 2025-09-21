@@ -26,7 +26,7 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #000;
+  background: transparent;
   color: #FFE8DB;
   min-height: 100vh;
   display: flex;
@@ -43,7 +43,7 @@ header {
 }
 
 #Logo {
-  font-size: 2rem;
+  font-size: 3rem;
   font-weight: bold;
   color: #FFE8DB;
   text-decoration: none;

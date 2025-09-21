@@ -1,195 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Typing Test</title>
-  <link rel="stylesheet" href="style/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Monkeytype Clone</title>
   <style>
-    #testContainer {
-      margin: 40px auto;
-      max-width: 800px;
-      text-align: center;
+    body {
+      margin: 0;
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #0f0f0f;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
-    #wordBox {
-      background: #111;
-      color: #FFE8DB;
-      padding: 20px;
-      border-radius: 8px;
-      border: 2px solid #FFE8DB;
-      font-size: 1.5rem;
-      line-height: 2rem;
+
+    #test-box {
+      max-width: 800px;
+      text-align: left;
+      font-size: 24px;
+      line-height: 1.6;
       word-wrap: break-word;
       margin-bottom: 20px;
-      position: relative;
-      min-height: 120px;
     }
+
+    .word {
+      margin-right: 10px;
+    }
+
     .char {
-      opacity: 0.5;
+      display: inline-block;
     }
-    .correct {
-      color: #8fce00;
-      opacity: 1;
+
+    .char.correct {
+      color: #4caf50;
     }
-    .incorrect {
-      color: #ff4c4c;
-      opacity: 1;
+
+    .char.incorrect {
+      color: #f44336;
+    }
+
+    .char.active {
       text-decoration: underline;
     }
-    /* Fake blinking caret */
-    #caret {
-      display: inline-block;
-      width: 2px;
-      background: #FFE8DB;
-      animation: blink 1s step-start infinite;
-      position: relative;
-      top: 3px;
-    }
-    @keyframes blink {
-      50% { opacity: 0; }
-    }
-    /* Hidden input */
-    #typingInput {
-      position: absolute;
+
+    #input {
       opacity: 0;
-      pointer-events: none;
+      position: absolute;
     }
-    #result {
-      margin-top: 20px;
-      font-size: 1.2rem;
-      font-weight: bold;
+
+    #live-stats {
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #ccc;
     }
   </style>
 </head>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WSRF821EHL"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-WSRF821EHL');
-</script>
-
 <body>
-  <header>
-    <a href="index.html" id="Logo">SwiftKeys</a>
-    <nav>
-      <a href="index.html" class="navigation">Home</a>
-      <a href="test.html" class="navigation">Test</a>
-      <a href="contact.html" class="navigation">Contact</a>
-    </nav>
-  </header>
 
-  <main>
-    <h2>🎵 Typing Test with Beats</h2>
-    <div id="testContainer">
-      <div id="wordBox"></div>
-      <!-- hidden input -->
-      <input type="text" id="typingInput" autofocus>
-      <div id="result"></div>
-    </div>
+  <div id="test-box"></div>
+  <input type="text" id="input" autofocus />
 
-    <audio id="song" src="sample.mp3"></audio>
-  </main>
-
-  <footer id="footer">
-    Made with &hearts; by <a href="https://github.com/bombaleabhinav">Abhinav</a>
-  </footer>
+  <div id="live-stats">
+    <p>
+      <strong>WPM:</strong> <span id="live-wpm">0</span>
+      &nbsp;
+      <strong>Accuracy:</strong> <span id="live-accuracy">0</span>%
+    </p>
+  </div>
 
   <script>
-    const lyrics = "the quick brown fox jumps over the lazy dog coding every day makes you better at problem solving practice consistently to achieve your goals focus and discipline always pay off in the long run";
-    const song = document.getElementById("song");
-    const wordBox = document.getElementById("wordBox");
-    const typingInput = document.getElementById("typingInput");
-    const result = document.getElementById("result");
+    const wordList = "the quick brown fox jumps over the lazy dog speed coding test monkeytype clone javascript typing challenge practice fast keyboard performance error feedback".split(" ");
+    const testBox = document.getElementById("test-box");
+    const input = document.getElementById("input");
+    const liveWpmDisplay = document.getElementById("live-wpm");
+    const liveAccDisplay = document.getElementById("live-accuracy");
 
-    let chars = [];
-    let currentIndex = 0;
-    let caret;
-    let idleTimer;
+    let words = [];
+    let typedChars = [];
+    let currentWordIndex = 0;
+    let currentCharIndex = 0;
+    let startTime = null;
+    let testEnded = false;
 
-    function initTest() {
-      wordBox.innerHTML = "";
-      chars = [];
-      currentIndex = 0;
-      result.textContent = "";
+    function generateWords() {
+      const manualString = "this is a manual typing test string to practice typing accuracy and speed";
+      words = manualString.trim().split(/\s+/);
+    }
 
-      lyrics.split("").forEach(c => {
-        const span = document.createElement("span");
-        span.textContent = c;
-        span.classList.add("char");
-        wordBox.appendChild(span);
-        chars.push(span);
+    function renderWords() {
+      testBox.innerHTML = '';
+      typedChars = [];
+      words.forEach((word, wi) => {
+        const wordSpan = document.createElement('span');
+        wordSpan.className = 'word';
+        wordSpan.setAttribute('data-word-index', wi);
+
+        [...word].forEach((char) => {
+          const charSpan = document.createElement('span');
+          charSpan.className = 'char';
+          charSpan.innerText = char;
+          wordSpan.appendChild(charSpan);
+        });
+
+        testBox.appendChild(wordSpan);
+        typedChars.push([]);
       });
-
-      // caret element
-      caret = document.createElement("span");
-      caret.id = "caret";
-      wordBox.insertBefore(caret, chars[0]);
-
-      typingInput.value = "";
-      typingInput.focus();
-      song.currentTime = 0;
-      song.pause();
     }
 
-    function updateCaretPosition() {
-      if (currentIndex < chars.length) {
-        wordBox.insertBefore(caret, chars[currentIndex]);
-      } else {
-        wordBox.appendChild(caret);
-      }
+    function highlightActiveChar() {
+      document.querySelectorAll('.char.active').forEach(c => c.classList.remove('active'));
+
+      const wordSpan = document.querySelector(`.word[data-word-index="${currentWordIndex}"]`);
+      if (!wordSpan) return;
+
+      const charSpan = wordSpan.children[currentCharIndex] || wordSpan.lastChild;
+      if (charSpan) charSpan.classList.add('active');
     }
 
-    function pauseSongInstantly() {
-      song.pause();
-    }
+    function calculateStats() {
+      let totalTyped = 0;
+      let correct = 0;
 
-    typingInput.addEventListener("input", () => {
-      const value = typingInput.value;
-
-      // Reset idle timer each time user types
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(pauseSongInstantly, 300);
-
-      // Start playing if typing
-      if (!song.paused) {
-        // already playing
-      } else if (value.length > 0) {
-        song.play();
-      }
-
-      chars.forEach((span, i) => {
-        const char = value[i];
-        if (char == null) {
-          span.classList.remove("correct", "incorrect");
-          span.classList.add("char");
-        } else if (char === span.textContent) {
-          span.classList.add("correct");
-          span.classList.remove("incorrect", "char");
-        } else {
-          span.classList.add("incorrect");
-          span.classList.remove("correct", "char");
+      for (let wi = 0; wi < typedChars.length; wi++) {
+        const typedWord = typedChars[wi];
+        const actualWord = words[wi];
+        for (let ci = 0; ci < typedWord.length; ci++) {
+          totalTyped++;
+          if (actualWord[ci] === typedWord[ci]) {
+            correct++;
+          }
         }
-      });
+      }
 
-      currentIndex = value.length;
-      updateCaretPosition();
+      const timeElapsed = (Date.now() - startTime) / 1000 / 60; // minutes
+      const wpm = timeElapsed > 0 ? Math.round((correct / 5) / timeElapsed) : 0;
+      const accuracy = totalTyped > 0 ? Math.round((correct / totalTyped) * 100) : 100;
 
-      if (value.length === chars.length) {
-        song.pause();
-        result.textContent = "✅ Test Complete! Well done!";
-        typingInput.blur();
+      return { wpm, accuracy };
+    }
+
+    function updateLiveStats() {
+      const { wpm, accuracy } = calculateStats();
+      liveWpmDisplay.textContent = wpm;
+      liveAccDisplay.textContent = accuracy;
+    }
+
+    function endTest() {
+      testEnded = true;
+      input.disabled = true;
+      input.blur();
+    }
+
+    input.addEventListener('keydown', (e) => {
+      if (testEnded) return;
+      if (!startTime) startTime = Date.now();
+
+      const currentWord = words[currentWordIndex];
+      const wordSpan = document.querySelector(`.word[data-word-index="${currentWordIndex}"]`);
+      const chars = wordSpan.querySelectorAll('.char');
+
+      if (e.key === ' ') {
+        e.preventDefault();
+
+        currentWordIndex++;
+        currentCharIndex = 0;
+
+        if (currentWordIndex >= words.length) {
+          endTest();
+        } else {
+          highlightActiveChar();
+        }
+        updateLiveStats();
+        return;
+      }
+
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+
+        if (currentCharIndex > 0) {
+          currentCharIndex--;
+          typedChars[currentWordIndex].pop();
+          chars[currentCharIndex].classList.remove('correct', 'incorrect');
+        } else if (currentWordIndex > 0) {
+          currentWordIndex--;
+          currentCharIndex = typedChars[currentWordIndex].length;
+          typedChars[currentWordIndex].pop();
+          const prevChars = document.querySelectorAll(`.word[data-word-index="${currentWordIndex}"] .char`);
+          if (currentCharIndex < prevChars.length) {
+            prevChars[currentCharIndex].classList.remove('correct', 'incorrect');
+          }
+        }
+
+        highlightActiveChar();
+        updateLiveStats();
+        return;
+      }
+
+      if (e.key.length === 1) {
+        const char = e.key;
+        const expectedChar = currentWord[currentCharIndex];
+        const charSpan = chars[currentCharIndex];
+
+        typedChars[currentWordIndex].push(char);
+
+        if (char === expectedChar) {
+          charSpan.classList.add('correct');
+          charSpan.classList.remove('incorrect');
+        } else {
+          charSpan.classList.add('incorrect');
+          charSpan.classList.remove('correct');
+        }
+
+        currentCharIndex++;
+        highlightActiveChar();
+        updateLiveStats();
+      }
+
+      // End test immediately after last letter of last word is typed
+      const isLastWord = currentWordIndex === words.length - 1;
+      const isLastChar = currentCharIndex === currentWord.length;
+
+      if (isLastWord && isLastChar) {
+        endTest();
       }
     });
 
-    // Ensure typingInput always focused
-    document.addEventListener("click", () => typingInput.focus());
+    function startTest() {
+      generateWords();
+      renderWords();
+      currentWordIndex = 0;
+      currentCharIndex = 0;
+      startTime = null;
+      testEnded = false;
+      input.value = '';
+      input.disabled = false;
+      input.focus();
+      highlightActiveChar();
+      liveWpmDisplay.textContent = '0';
+      liveAccDisplay.textContent = '0';
+    }
 
-    // Initialize test on load
-    initTest();
+    // Shortcut: Tab + Enter to restart test
+    let tabPressed = false;
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        tabPressed = true;
+      }
+
+      if (tabPressed && e.key === 'Enter') {
+        e.preventDefault();
+        startTest();
+        tabPressed = false;
+      }
+    });
+
+    document.addEventListener('keyup', (e) => {
+      if (e.key === 'Tab') {
+        tabPressed = false;
+      }
+    });
+
+    window.onload = startTest;
+    document.body.addEventListener('click', () => input.focus());
   </script>
+
 </body>
 </html>
