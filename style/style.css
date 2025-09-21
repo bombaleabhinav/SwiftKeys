@@ -10,6 +10,18 @@
     background-color: #5682B1;
 }
 
+#backgroundVideo {
+  position: fixed;   /* Fix it in place */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;  /* Cover entire viewport without distortion */
+  z-index: -1;        /* Put behind everything */
+  pointer-events: none; /* So clicks pass through */
+}
+
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: #000;
