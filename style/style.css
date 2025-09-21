@@ -6,14 +6,14 @@
 }
 
 *::selection{
-    color: rgb(38, 38, 38);
+    color: black;
     background-color: #5682B1;
 }
 
 
 
 #backgroundVideo {
-  position: fixed;   /* Fix it in place */
+  position: fixed;   /* Idk somehow fix it in place */
   top: 0;
   left: 0;
   width: 100vw;
