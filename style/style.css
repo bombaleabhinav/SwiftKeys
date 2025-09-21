@@ -10,6 +10,8 @@
     background-color: #5682B1;
 }
 
+
+
 #backgroundVideo {
   position: fixed;   /* Fix it in place */
   top: 0;
@@ -37,11 +39,11 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background: #000;
+  
 }
 
 #Logo {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: bold;
   color: #FFE8DB;
   text-decoration: none;
@@ -53,7 +55,7 @@ header {
 
 nav a {
   margin: 0 10px;
-  font-size: 1rem;
+  font-size: 1.5rem;
   text-decoration: none;
   color: #FFE8DB;
   transition: color 0.3s;
@@ -75,7 +77,7 @@ main {
 }
 
 #headline {
-  font-size: 2rem;
+  font-size: 2.5rem;
   margin-bottom: 2rem;
 }
 
@@ -91,15 +93,15 @@ main {
 }
 
 #startTest:hover {
-  background: #5682B1;
+  background-color: transparent;
+  color: #FFE8DB;
 }
 
 /* Footer */
 #footer {
   text-align: center;
   padding: 1rem;
-  background: #000;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
 }
 
 #footer a {
