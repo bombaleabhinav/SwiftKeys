@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *{
     background-color: black;
 }
@@ -120,3 +121,139 @@ a:hover{
     width: auto;
     margin-left: 1000px;
 }
+=======
+/* Reset + Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*::selection{
+    color: black;
+    background-color: #5682B1;
+}
+
+
+
+#backgroundVideo {
+  position: fixed;   /* Idk somehow fix it in place */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;  /* Cover entire viewport without distortion */
+  z-index: -1;        /* Put behind everything */
+  pointer-events: none; /* So clicks pass through */
+}
+
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #000;
+  color: #FFE8DB;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  
+}
+
+#Logo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #FFE8DB;
+  text-decoration: none;
+}
+
+#Logo:hover {
+  color: #739EC9;
+}
+
+nav a {
+  margin: 0 10px;
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: #FFE8DB;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #5682B1;
+}
+
+/* Main */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+#headline {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+#startTest {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: 2px solid #FFE8DB;
+  border-radius: 6px;
+  background: #FFE8DB;
+  color: #000;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#startTest:hover {
+  background-color: transparent;
+  color: #FFE8DB;
+}
+
+/* Footer */
+#footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 1.2rem;
+}
+
+#footer a {
+  color: #FFE8DB;
+  text-decoration: none;
+}
+
+#footer a:hover {
+  color: #5682B1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 10px;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  #headline {
+    font-size: 1.5rem;
+  }
+  #startTest {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+>>>>>>> c13fdccccd9ff9a2a61c9b56a78ce42488c7b40e

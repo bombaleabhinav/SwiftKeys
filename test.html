@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Typing Test</title>
@@ -18,3 +19,101 @@
     </footer>
 </body>
 </html>
+=======
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Typing Test</title>
+  <link rel="stylesheet" href="style/style.css" />
+  <style>
+    /* Existing styles omitted for brevity... */
+
+    /* Add block container styling */
+   /* Grid layout for blocks */
+    /* Full-width grid layout */
+    .block-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      padding: 40px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Squarish clickable blocks */
+    .clickable-block {
+      background-color: #000000;
+      color: #FFE8DB;
+      border: 2px solid #FFE8DB;
+      border-radius: 12px;
+      aspect-ratio: 1 / 1; /* Makes the blocks square */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 500;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px transparent;
+    }
+
+    .clickable-block:hover {
+      background: linear-gradient(45deg ,#5682B1);
+      box-shadow: 0 0 14px #000;
+      color: black;
+      transform: translateY(-10px);
+    }
+
+    /* Responsive layout */
+    @media (max-width: 992px) {
+      .block-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .block-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .clickable-block {
+        font-size: 1.2rem;
+      }
+    }
+
+
+  </style>
+</head>
+
+<body>
+  
+  <video autoplay muted loop id="backgroundVideo">
+    <source src="index_bg_4.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <header>
+    <a href="index.html" id="Logo">SwiftKeys</a>
+    <nav>
+      <a href="index.html" class="navigation">Home</a>
+      <a href="test.html" class="navigation">Test</a>
+      <a href="contact.html" class="navigation">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+  <section class="block-grid">
+    <a href="git-commands.html" class="clickable-block">Git Commands</a>
+    <a href="python-commands.html" class="clickable-block">Python Basics</a>
+    <a href="linux-commands.html" class="clickable-block">Linux Commands</a>
+  </section>
+  </main>
+
+
+
+  <footer id="footer">
+    Made with &hearts; by <a href="https://github.com/bombaleabhinav">Abhinav</a>
+  </footer>
+</body>
+</html>
+>>>>>>> c13fdccccd9ff9a2a61c9b56a78ce42488c7b40e
