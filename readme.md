@@ -4,7 +4,7 @@
 ---
 Wesbite is live: https://bombaleabhinav.github.io/SwiftKeys/
 ---
-![alt text](image.png)
+![alt text](image-1.png)
 #Color Pallete: 
 **https://colorhunt.co/palette/0000005682b1739ec9ffe8db**
 
