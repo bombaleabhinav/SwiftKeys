@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Git Typing Practice</title>
+  <link rel="stylesheet" href="style/style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: transparent;
+      color: #FFE8DB;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    #sidebar {
+      width: 220px;
+      background-color: transparent;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-right: 1px solid transparent;
+    }
+
+    #sidebar button {
+      background: #2a2a2a;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      color: #FFE8DB;
+      cursor: pointer;
+      text-align: left;
+      font-size: 16px;
+      transition: background 0.2s;
+    }
+
+    #sidebar button:hover {
+      background: #5682B1;
+    }
+
+    /* Main area */
+    #main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #test-box {
+      max-width: 800px;
+      text-align: left;
+      font-size: 24px;
+      line-height: 1.6;
+      word-wrap: break-word;
+      margin-top: 0px;
+      margin-bottom: 20px;
+      white-space: pre-wrap;
+    }
+
+    .word {
+      margin-right: 10px;
+    }
+
+    .char {
+      display: inline-block;
+    }
+
+    .char.correct { color: #4caf50; }
+    .char.incorrect { color: #f44336; }
+    .char.active {
+      background-color: #444;
+      border-radius: 2px;
+    }
+
+    #input { opacity: 0; position: absolute; }
+
+    #live-stats {
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #FFE8DB;
+    }
+  </style>
+</head>
+<body>
+
+  <video autoplay muted loop id="backgroundVideo">
+    <source src="media/index_bg_4.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <header>
+    <a href="index.html" id="Logo">SwiftKeys</a>
+    <nav>
+      <a href="index.html" class="navigation">Home</a>
+      <a href="test.html" class="navigation">Test</a>
+      <a href="contact.html" class="navigation">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Sidebar -->
+  <div id="sidebar">  
+    <button onclick="loadCategory('basics')">Basics</button>
+    <button onclick="loadCategory('push')">Push</button>
+    <button onclick="loadCategory('terminal')">Terminal</button>
+  
+  </div>
+
+  <!-- Main typing area -->
+  <div id="main">
+    <div id="test-box"></div>
+    <input type="text" id="input" autofocus />
+    <div id="live-stats">
+      <p>
+        <strong>WPM:</strong> <span id="live-wpm">0</span>
+        &nbsp;
+        <strong>Accuracy:</strong> <span id="live-accuracy">0</span>%
+      </p>
+    </div>
+  </div>
+
+  <footer id="footer">
+    Made with &hearts; by <a href="https://github.com/bombaleabhinav">Abhinav</a>
+  </footer>
+
+  <script>
+    const testBox = document.getElementById("test-box");
+    const input = document.getElementById("input");
+    const liveWpmDisplay = document.getElementById("live-wpm");
+    const liveAccDisplay = document.getElementById("live-accuracy");
+
+    let words = [];
+    let typedChars = [];
+    let currentWordIndex = 0;
+    let currentCharIndex = 0;
+    let startTime = null;
+    let testEnded = false;
+
+    // Categories of commands
+    const categories = {
+      basics: `
+git init
+git status
+git add .
+git commit -m "first commit"
+git push origin main
+git push -u origin main
+      `,
+      push: `
+git pull origin main
+git fetch origin
+git branch -d feature
+git branch -D feature
+git push origin --delete feature
+      `,
+      terminal: `
+ls
+pwd 
+cd Desktop
+git bash
+mkdir directoryName
+touch index.html
+touch style.css
+touch app.js
+rmdir directoryName
+`,
+      delete: `
+git branch -d feature
+git branch -D feature
+git push origin --delete feature
+      `
+    };
+
+    function generateWords(category) {
+      const manualString = categories[category] || categories.basics;
+      words = manualString.trim().split("\n").map(line => line.split(" "));
+    }
+
+    function renderWords() {
+      testBox.innerHTML = '';
+      typedChars = [];
+
+      words.forEach((line, li) => {
+        line.forEach((word, wi) => {
+          const wordSpan = document.createElement('span');
+          wordSpan.className = 'word';
+          wordSpan.setAttribute('data-word-index', `${li}-${wi}`);
+
+          [...word].forEach((char) => {
+            const charSpan = document.createElement('span');
+            charSpan.className = 'char';
+            charSpan.innerText = char;
+            wordSpan.appendChild(charSpan);
+          });
+
+          testBox.appendChild(wordSpan);
+          typedChars.push([]);
+
+          const space = document.createTextNode(" ");
+          testBox.appendChild(space);
+        });
+
+        testBox.appendChild(document.createElement("br"));
+      });
+    }
+
+    function highlightActiveChar() {
+      document.querySelectorAll('.char.active').forEach(c => c.classList.remove('active'));
+      const wordSpan = document.querySelectorAll('.word')[currentWordIndex];
+      if (!wordSpan) return;
+      const charSpan = wordSpan.children[currentCharIndex] || wordSpan.lastChild;
+      if (charSpan) charSpan.classList.add('active');
+    }
+
+    function calculateStats() {
+      let totalTyped = 0;
+      let correct = 0;
+      const flatWords = words.flat();
+
+      for (let wi = 0; wi < typedChars.length; wi++) {
+        const typedWord = typedChars[wi];
+        const actualWord = flatWords[wi];
+        for (let ci = 0; ci < typedWord.length; ci++) {
+          totalTyped++;
+          if (actualWord[ci] === typedWord[ci]) {
+            correct++;
+          }
+        }
+      }
+
+      const timeElapsed = (Date.now() - startTime) / 1000 / 60; // minutes
+      const wpm = timeElapsed > 0 ? Math.round((correct / 5) / timeElapsed) : 0;
+      const accuracy = totalTyped > 0 ? Math.round((correct / totalTyped) * 100) : 100;
+
+      return { wpm, accuracy };
+    }
+
+    function updateLiveStats() {
+      const { wpm, accuracy } = calculateStats();
+      liveWpmDisplay.textContent = wpm;
+      liveAccDisplay.textContent = accuracy;
+    }
+
+    function endTest() {
+      testEnded = true;
+      input.disabled = true;
+      input.blur();
+    }
+
+    input.addEventListener('keydown', (e) => {
+      if (testEnded) return;
+      if (!startTime) startTime = Date.now();
+
+      const flatWords = words.flat();
+      const currentWord = flatWords[currentWordIndex];
+      const wordSpan = document.querySelectorAll('.word')[currentWordIndex];
+      const chars = wordSpan.querySelectorAll('.char');
+
+      if (e.key === ' ') {
+        e.preventDefault();
+        currentWordIndex++;
+        currentCharIndex = 0;
+        if (currentWordIndex >= flatWords.length) {
+          endTest();
+        } else {
+          highlightActiveChar();
+        }
+        updateLiveStats();
+        return;
+      }
+
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        if (currentCharIndex > 0) {
+          currentCharIndex--;
+          typedChars[currentWordIndex].pop();
+          chars[currentCharIndex].classList.remove('correct', 'incorrect');
+        } else if (currentWordIndex > 0) {
+          currentWordIndex--;
+          const prevWordSpan = document.querySelectorAll('.word')[currentWordIndex];
+          currentCharIndex = typedChars[currentWordIndex].length;
+          if (currentCharIndex > 0) {
+            currentCharIndex--;
+            typedChars[currentWordIndex].pop();
+            prevWordSpan.children[currentCharIndex].classList.remove('correct', 'incorrect');
+          }
+        }
+        highlightActiveChar();
+        updateLiveStats();
+        return;
+      }
+
+      if (e.key.length === 1) {
+        const char = e.key;
+        const expectedChar = currentWord[currentCharIndex];
+        const charSpan = chars[currentCharIndex];
+        typedChars[currentWordIndex].push(char);
+
+        if (char === expectedChar) {
+          charSpan.classList.add('correct');
+          charSpan.classList.remove('incorrect');
+        } else {
+          charSpan.classList.add('incorrect');
+          charSpan.classList.remove('correct');
+        }
+
+        currentCharIndex++;
+        highlightActiveChar();
+        updateLiveStats();
+      }
+
+      const isLastWord = currentWordIndex === flatWords.length - 1;
+      const isLastChar = currentCharIndex === currentWord.length;
+      if (isLastWord && isLastChar) {
+        endTest();
+      }
+    });
+
+    function startTest(category = "basics") {
+      generateWords(category);
+      renderWords();
+      currentWordIndex = 0;
+      currentCharIndex = 0;
+      startTime = null;
+      testEnded = false;
+      input.value = '';
+      input.disabled = false;
+      input.focus();
+      highlightActiveChar();
+      liveWpmDisplay.textContent = '0';
+      liveAccDisplay.textContent = '0';
+    }
+
+    function loadCategory(category) {
+      startTest(category);
+    }
+
+    window.onload = () => startTest("basics");
+    document.body.addEventListener('click', () => input.focus());
+  </script>
+
+</body>
+</html>
