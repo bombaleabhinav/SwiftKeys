@@ -5,14 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Git Typing Practice</title>
   <link rel="stylesheet" href="style/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: transparent;
+      background-color: black;
       color: #FFE8DB;
       display: flex;
+      flex-direction: column;
       height: 100vh;
+      overflow: hidden;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      z-index: 2;
+      flex-shrink: 0;
+    }
+
+    header a {
+      color: #FFE8DB;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    /* Wrapper for sidebar + main */
+    #content {
+      display: flex;
+      flex: 1;
       overflow: hidden;
     }
 
@@ -25,12 +49,13 @@
       flex-direction: column;
       gap: 10px;
       border-right: 1px solid transparent;
+      flex-shrink: 0;
     }
 
     #sidebar button {
       background: #2a2a2a;
       border: none;
-      padding: 10px;
+      padding: 12px;
       border-radius: 6px;
       color: #FFE8DB;
       cursor: pointer;
@@ -39,8 +64,10 @@
       transition: background 0.2s;
     }
 
-    #sidebar button:hover {
+    #sidebar button:hover,
+    #sidebar button:focus {
       background: #5682B1;
+      outline: none;
     }
 
     /* Main area */
@@ -50,49 +77,89 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 20px;
+      overflow: hidden;
     }
 
     #test-box {
-      max-width: 800px;
+      max-width: 900px;
       text-align: left;
-      font-size: 24px;
-      line-height: 1.6;
+      font-size: 28px;          /* Increased font size */
+      line-height: 2;           /* Better spacing */
       word-wrap: break-word;
-      margin-top: 0px;
       margin-bottom: 20px;
       white-space: pre-wrap;
+      overflow-y: auto;
+      max-height: 65vh;         /* Scroll if more than ~10 lines */
+      padding: 20px;
     }
 
-    .word {
-      margin-right: 10px;
-    }
+    .word { margin-right: 12px; }
 
-    .char {
-      display: inline-block;
-    }
+    .char { display: inline-block; }
 
     .char.correct { color: #4caf50; }
     .char.incorrect { color: #f44336; }
     .char.active {
-      background-color: #444;
-      border-radius: 2px;
-    }
+  position: relative;
+  color: inherit;
+  background: transparent;
+  padding: 0 2px;
+}
+
+/* caret element using pseudo-element so caret is independent of text color */
+.char.active {
+  position: relative;
+  background: transparent;
+  padding-bottom: 1px;
+}
+
+/* animated underline that grows from left to right */
+.char.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 3px;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg,#5682B1,#739EC9);
+}
+
 
     #input { opacity: 0; position: absolute; }
 
     #live-stats {
-      margin-bottom: 10px;
-      font-size: 18px;
+      margin-bottom: 15px;
+      font-size: 20px;
       color: #FFE8DB;
+    }
+
+    /* Redo button */
+    #redo-btn {
+      background: transparent;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #FFE8DB;
+      font-size: 20px;
+      margin-top: 12px;
+      transition: background 0.2s;
+    }
+    #redo-btn:hover,
+    #redo-btn:focus {
+      background: #5682B1;
+      outline: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-
-  <video autoplay muted loop id="backgroundVideo">
-    <source src="media/index_bg_4.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
 
   <header>
     <a href="index.html" id="Logo">SwiftKeys</a>
@@ -103,24 +170,26 @@
     </nav>
   </header>
 
-  <!-- Sidebar -->
-  <div id="sidebar">  
-    <button onclick="loadCategory('basics')">Basics</button>
-    <button onclick="loadCategory('push')">Push</button>
-    <button onclick="loadCategory('terminal')">Terminal</button>
-  
-  </div>
+  <div id="content">
+    <!-- Sidebar -->
+    <div id="sidebar">  
+      <button onclick="loadCategory('basics')">Basics</button>
+      <button onclick="loadCategory('push')">Push</button>
+      <button onclick="loadCategory('terminal')">Terminal</button>
+    </div>
 
-  <!-- Main typing area -->
-  <div id="main">
-    <div id="test-box"></div>
-    <input type="text" id="input" autofocus />
-    <div id="live-stats">
-      <p>
-        <strong>WPM:</strong> <span id="live-wpm">0</span>
-        &nbsp;
-        <strong>Accuracy:</strong> <span id="live-accuracy">0</span>%
-      </p>
+    <!-- Main typing area -->
+    <div id="main">
+      <div id="test-box"></div>
+      <input type="text" id="input" autofocus />
+      <div id="live-stats">
+        <p>
+          <strong>WPM:</strong> <span id="live-wpm">0</span>
+          &nbsp;
+          <strong>Accuracy:</strong> <span id="live-accuracy">0</span>%
+        </p>
+      </div>
+      <button id="redo-btn" tabindex="0"><i class="fas fa-redo"></i></button>
     </div>
   </div>
 
@@ -133,6 +202,7 @@
     const input = document.getElementById("input");
     const liveWpmDisplay = document.getElementById("live-wpm");
     const liveAccDisplay = document.getElementById("live-accuracy");
+    const redoBtn = document.getElementById("redo-btn");
 
     let words = [];
     let typedChars = [];
@@ -141,7 +211,7 @@
     let startTime = null;
     let testEnded = false;
 
-    // Categories of commands
+    // Categories
     const categories = {
       basics: `
 git init
@@ -168,12 +238,7 @@ touch index.html
 touch style.css
 touch app.js
 rmdir directoryName
-`,
-      delete: `
-git branch -d feature
-git branch -D feature
-git push origin --delete feature
-      `
+`
     };
 
     function generateWords(category) {
@@ -204,7 +269,6 @@ git push origin --delete feature
           const space = document.createTextNode(" ");
           testBox.appendChild(space);
         });
-
         testBox.appendChild(document.createElement("br"));
       });
     }
@@ -215,6 +279,8 @@ git push origin --delete feature
       if (!wordSpan) return;
       const charSpan = wordSpan.children[currentCharIndex] || wordSpan.lastChild;
       if (charSpan) charSpan.classList.add('active');
+
+      testBox.scrollTop = testBox.scrollHeight;
     }
 
     function calculateStats() {
@@ -227,13 +293,11 @@ git push origin --delete feature
         const actualWord = flatWords[wi];
         for (let ci = 0; ci < typedWord.length; ci++) {
           totalTyped++;
-          if (actualWord[ci] === typedWord[ci]) {
-            correct++;
-          }
+          if (actualWord[ci] === typedWord[ci]) correct++;
         }
       }
 
-      const timeElapsed = (Date.now() - startTime) / 1000 / 60; // minutes
+      const timeElapsed = (Date.now() - startTime) / 1000 / 60;
       const wpm = timeElapsed > 0 ? Math.round((correct / 5) / timeElapsed) : 0;
       const accuracy = totalTyped > 0 ? Math.round((correct / totalTyped) * 100) : 100;
 
@@ -252,74 +316,88 @@ git push origin --delete feature
       input.blur();
     }
 
-    input.addEventListener('keydown', (e) => {
-      if (testEnded) return;
-      if (!startTime) startTime = Date.now();
+    // Updated listener (Enter = next line, space = normal char)
+// Updated listener (Space = next word, Enter = next line, normal typing works)
+input.addEventListener('keydown', (e) => {
+  if (testEnded) return;
+  if (!startTime) startTime = Date.now();
 
-      const flatWords = words.flat();
-      const currentWord = flatWords[currentWordIndex];
-      const wordSpan = document.querySelectorAll('.word')[currentWordIndex];
-      const chars = wordSpan.querySelectorAll('.char');
+  const flatWords = words.flat();
+  const currentWord = flatWords[currentWordIndex];
+  const wordSpan = document.querySelectorAll('.word')[currentWordIndex];
+  const chars = wordSpan.querySelectorAll('.char');
 
-      if (e.key === ' ') {
-        e.preventDefault();
-        currentWordIndex++;
-        currentCharIndex = 0;
-        if (currentWordIndex >= flatWords.length) {
-          endTest();
-        } else {
-          highlightActiveChar();
-        }
-        updateLiveStats();
-        return;
-      }
-
-      if (e.key === 'Backspace') {
-        e.preventDefault();
-        if (currentCharIndex > 0) {
-          currentCharIndex--;
-          typedChars[currentWordIndex].pop();
-          chars[currentCharIndex].classList.remove('correct', 'incorrect');
-        } else if (currentWordIndex > 0) {
-          currentWordIndex--;
-          const prevWordSpan = document.querySelectorAll('.word')[currentWordIndex];
-          currentCharIndex = typedChars[currentWordIndex].length;
-          if (currentCharIndex > 0) {
-            currentCharIndex--;
-            typedChars[currentWordIndex].pop();
-            prevWordSpan.children[currentCharIndex].classList.remove('correct', 'incorrect');
-          }
-        }
-        highlightActiveChar();
-        updateLiveStats();
-        return;
-      }
-
-      if (e.key.length === 1) {
-        const char = e.key;
-        const expectedChar = currentWord[currentCharIndex];
-        const charSpan = chars[currentCharIndex];
-        typedChars[currentWordIndex].push(char);
-
-        if (char === expectedChar) {
-          charSpan.classList.add('correct');
-          charSpan.classList.remove('incorrect');
-        } else {
-          charSpan.classList.add('incorrect');
-          charSpan.classList.remove('correct');
-        }
-
-        currentCharIndex++;
-        highlightActiveChar();
-        updateLiveStats();
-      }
-
-      const isLastWord = currentWordIndex === flatWords.length - 1;
-      const isLastChar = currentCharIndex === currentWord.length;
-      if (isLastWord && isLastChar) {
+  // SPACE → move to next word in same line
+  if (e.key === ' ') {
+    e.preventDefault();
+    if (currentCharIndex >= currentWord.length) {
+      currentWordIndex++;
+      currentCharIndex = 0;
+      if (currentWordIndex >= flatWords.length) {
         endTest();
+      } else {
+        highlightActiveChar();
       }
-    });
+    }
+    updateLiveStats();
+    return;
+  }
+
+  // ENTER → move to next line
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    currentWordIndex++;
+    currentCharIndex = 0;
+    if (currentWordIndex >= flatWords.length) {
+      endTest();
+    } else {
+      highlightActiveChar();
+    }
+    updateLiveStats();
+    return;
+  }
+
+  // BACKSPACE
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    if (currentCharIndex > 0) {
+      currentCharIndex--;
+      typedChars[currentWordIndex].pop();
+      chars[currentCharIndex].classList.remove('correct', 'incorrect');
+    }
+    highlightActiveChar();
+    updateLiveStats();
+    return;
+  }
+
+  // Normal character typing
+  if (e.key.length === 1) {
+    const char = e.key;
+    const expectedChar = currentWord[currentCharIndex];
+    const charSpan = chars[currentCharIndex];
+    typedChars[currentWordIndex].push(char);
+
+    if (char === expectedChar) {
+      charSpan.classList.add('correct');
+      charSpan.classList.remove('incorrect');
+    } else {
+      charSpan.classList.add('incorrect');
+      charSpan.classList.remove('correct');
+    }
+
+    currentCharIndex++;
+    highlightActiveChar();
+    updateLiveStats();
+  }
+
+  // End test check
+  const isLastWord = currentWordIndex === flatWords.length - 1;
+  const isLastChar = currentCharIndex === currentWord.length;
+  if (isLastWord && isLastChar) {
+    endTest();
+  }
+});
+
 
     function startTest(category = "basics") {
       generateWords(category);
@@ -339,6 +417,11 @@ git push origin --delete feature
     function loadCategory(category) {
       startTest(category);
     }
+
+    redoBtn.addEventListener("click", () => startTest());
+    redoBtn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") startTest();
+    });
 
     window.onload = () => startTest("basics");
     document.body.addEventListener('click', () => input.focus());

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Git Typing Practice</title>
   <link rel="stylesheet" href="style/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
     body {
       margin: 0;
@@ -100,9 +101,30 @@
     .char.correct { color: #4caf50; }
     .char.incorrect { color: #f44336; }
     .char.active {
-      background-color: #444;
-      border-radius: 3px;
-    }
+  position: relative;
+  color: inherit;
+  background: transparent;
+  padding: 0 2px;
+}
+
+/* caret element using pseudo-element so caret is independent of text color */
+.char.active {
+  position: relative;
+  background: transparent;
+  padding-bottom: 1px;
+}
+
+/* animated underline that grows from left to right */
+.char.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 3px;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg,#5682B1,#739EC9);
+}
+
 
     #input { opacity: 0; position: absolute; }
 
@@ -114,7 +136,7 @@
 
     /* Redo button */
     #redo-btn {
-      background: #2a2a2a;
+      background: transparent;
       border: none;
       padding: 12px 20px;
       border-radius: 6px;
@@ -167,7 +189,7 @@
           <strong>Accuracy:</strong> <span id="live-accuracy">0</span>%
         </p>
       </div>
-      <button id="redo-btn" tabindex="0">⟳ Redo</button>
+      <button id="redo-btn" tabindex="0"><i class="fas fa-redo"></i></button>
     </div>
   </div>
 
@@ -295,69 +317,87 @@ rmdir directoryName
     }
 
     // Updated listener (Enter = next line, space = normal char)
-    input.addEventListener('keydown', (e) => {
-      if (testEnded) return;
-      if (!startTime) startTime = Date.now();
+// Updated listener (Space = next word, Enter = next line, normal typing works)
+input.addEventListener('keydown', (e) => {
+  if (testEnded) return;
+  if (!startTime) startTime = Date.now();
 
-      const flatWords = words.flat();
-      const currentWord = flatWords[currentWordIndex];
-      const wordSpan = document.querySelectorAll('.word')[currentWordIndex];
-      const chars = wordSpan.querySelectorAll('.char');
+  const flatWords = words.flat();
+  const currentWord = flatWords[currentWordIndex];
+  const wordSpan = document.querySelectorAll('.word')[currentWordIndex];
+  const chars = wordSpan.querySelectorAll('.char');
 
-      // Enter → move to next word/line
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        currentWordIndex++;
-        currentCharIndex = 0;
-        if (currentWordIndex >= flatWords.length) {
-          endTest();
-        } else {
-          highlightActiveChar();
-        }
-        updateLiveStats();
-        return;
-      }
-
-      // Backspace
-      if (e.key === 'Backspace') {
-        e.preventDefault();
-        if (currentCharIndex > 0) {
-          currentCharIndex--;
-          typedChars[currentWordIndex].pop();
-          chars[currentCharIndex].classList.remove('correct', 'incorrect');
-        }
-        highlightActiveChar();
-        updateLiveStats();
-        return;
-      }
-
-      // Normal typing (letters, numbers, space, symbols)
-      if (e.key.length === 1) {
-        const char = e.key;
-        const expectedChar = currentWord[currentCharIndex];
-        const charSpan = chars[currentCharIndex];
-        typedChars[currentWordIndex].push(char);
-
-        if (char === expectedChar) {
-          charSpan.classList.add('correct');
-          charSpan.classList.remove('incorrect');
-        } else {
-          charSpan.classList.add('incorrect');
-          charSpan.classList.remove('correct');
-        }
-
-        currentCharIndex++;
-        highlightActiveChar();
-        updateLiveStats();
-      }
-
-      // End test check
-      const isLastWord = currentWordIndex === flatWords.length - 1;
-      const isLastChar = currentCharIndex === currentWord.length;
-      if (isLastWord && isLastChar) {
+  // SPACE → move to next word in same line
+  if (e.key === ' ') {
+    e.preventDefault();
+    if (currentCharIndex >= currentWord.length) {
+      currentWordIndex++;
+      currentCharIndex = 0;
+      if (currentWordIndex >= flatWords.length) {
         endTest();
+      } else {
+        highlightActiveChar();
       }
-    });
+    }
+    updateLiveStats();
+    return;
+  }
+
+  // ENTER → move to next line
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    currentWordIndex++;
+    currentCharIndex = 0;
+    if (currentWordIndex >= flatWords.length) {
+      endTest();
+    } else {
+      highlightActiveChar();
+    }
+    updateLiveStats();
+    return;
+  }
+
+  // BACKSPACE
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    if (currentCharIndex > 0) {
+      currentCharIndex--;
+      typedChars[currentWordIndex].pop();
+      chars[currentCharIndex].classList.remove('correct', 'incorrect');
+    }
+    highlightActiveChar();
+    updateLiveStats();
+    return;
+  }
+
+  // Normal character typing
+  if (e.key.length === 1) {
+    const char = e.key;
+    const expectedChar = currentWord[currentCharIndex];
+    const charSpan = chars[currentCharIndex];
+    typedChars[currentWordIndex].push(char);
+
+    if (char === expectedChar) {
+      charSpan.classList.add('correct');
+      charSpan.classList.remove('incorrect');
+    } else {
+      charSpan.classList.add('incorrect');
+      charSpan.classList.remove('correct');
+    }
+
+    currentCharIndex++;
+    highlightActiveChar();
+    updateLiveStats();
+  }
+
+  // End test check
+  const isLastWord = currentWordIndex === flatWords.length - 1;
+  const isLastChar = currentCharIndex === currentWord.length;
+  if (isLastWord && isLastChar) {
+    endTest();
+  }
+});
+
 
     function startTest(category = "basics") {
       generateWords(category);
