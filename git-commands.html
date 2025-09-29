@@ -42,15 +42,27 @@
 
     /* Sidebar */
     #sidebar {
-      width: 220px;
-      background-color: transparent;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      border-right: 1px solid transparent;
-      flex-shrink: 0;
-    }
+  width: 220px;
+  background-color: transparent;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-right: 1px solid transparent;
+  flex-shrink: 0;
+  overflow-y: auto;       /* <-- makes it scrollable if tall */
+  max-height: calc(100vh - 60px); /* keep inside viewport */
+}
+
+#sidebar h3 {
+  color: #FFE8DB;
+  font-size: 18px;
+  margin: 15px 0 8px;
+  font-weight: bold;
+  border-bottom: 1px solid #444;
+  padding-bottom: 4px;
+}
+
 
     #sidebar button {
       background: #2a2a2a;
@@ -153,10 +165,16 @@
     }
 
     footer {
-      text-align: center;
-      padding: 10px;
-      font-size: 14px;
-    }
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  position: fixed;      /* stick to bottom */
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+}
+
   </style>
 </head>
 <body>
@@ -168,30 +186,47 @@
       <a href="test.html" class="navigation">Test</a>
       <a href="contact.html" class="navigation">Contact</a>
     </nav>
+    
   </header>
 
   <div id="content">
     <!-- Sidebar -->
-    <div id="sidebar">  
-      <button onclick="loadCategory('basics')">Basics</button>
-      <button onclick="loadCategory('push')">Push</button>
-      <button onclick="loadCategory('terminal')">Terminal</button>
-    </div>
+   <div id="sidebar">  
+  <h3>Git Commands</h3>
+  <button onclick="loadCategory('basics')">Basics</button>
+  <button onclick="loadCategory('push')">Push</button>
+  <button onclick="loadCategory('terminal')">Terminal</button>
+ 
+
+  <h3>Problem Sets</h3>
+  <button onclick="loadCategory('problems')">Problem Set 1</button>
+  <button onclick="loadCategory('problems2')">Problem Set 2</button>
+   <button onclick="loadCategory('branching')">Branching</button>
+  <button onclick="loadCategory('merging')">Merging</button>
+  <button onclick="loadCategory('rebase')">Rebase</button>
+  <button onclick="loadCategory('stash')">Stash</button>
+  <button onclick="loadCategory('config')">Config</button>
+  <button onclick="loadCategory('remote')">Remote</button>
+</div>
+
+
 
     <!-- Main typing area -->
-    <div id="main">
-      <div id="test-box"></div>
-      <input type="text" id="input" autofocus />
-      <div id="live-stats">
-        <p>
-          <strong>WPM:</strong> <span id="live-wpm">0</span>
-          &nbsp;
-          <strong>Accuracy:</strong> <span id="live-accuracy">0</span>%
-        </p>
-      </div>
-      <button id="redo-btn" tabindex="0"><i class="fas fa-redo"></i></button>
-    </div>
+  <!-- Add Question Box above typing box -->
+<div id="main">
+  <div id="question-box" style="font-size:20px; margin-bottom:15px; text-align:center; color:#FFE8DB;"></div>
+  <div id="test-box"></div>
+  <input type="text" id="input" autofocus />
+  <div id="live-stats">
+    <p>
+      <strong>WPM:</strong> <span id="live-wpm">0</span>
+      &nbsp;
+      <strong>Accuracy:</strong> <span id="live-accuracy">0</span>%
+    </p>
   </div>
+  <button id="redo-btn" tabindex="0"><i class="fas fa-redo"></i></button>
+</div>
+
 
   <footer id="footer">
     Made with &hearts; by <a href="https://github.com/bombaleabhinav">Abhinav</a>
@@ -212,23 +247,24 @@
     let testEnded = false;
 
     // Categories
-    const categories = {
-      basics: `
+// Categories (Normal + Problem Sets)
+const categories = {
+  basics: `
 git init
 git status
 git add .
 git commit -m "first commit"
 git push origin main
 git push -u origin main
-      `,
-      push: `
+  `,
+  push: `
 git pull origin main
 git fetch origin
 git branch -d feature
 git branch -D feature
 git push origin --delete feature
-      `,
-      terminal: `
+  `,
+  terminal: `
 ls
 pwd 
 cd Desktop
@@ -238,13 +274,43 @@ touch index.html
 touch style.css
 touch app.js
 rmdir directoryName
-`
-    };
+  `,
+  // Problem Sets
+  problems: {
+    question: "Q1: Initialize a Git repo and make your first commit.",
+    answer: `
+git init
+git add .
+git commit -m "first commit"
+    `
+  },
+  problems2: {
+    question: "Q2: Create a new branch called 'feature' and push it to remote.",
+    answer: `
+git checkout -b feature
+git push origin feature
+    `
+  }
+};
 
-    function generateWords(category) {
-      const manualString = categories[category] || categories.basics;
-      words = manualString.trim().split("\n").map(line => line.split(" "));
-    }
+// Modify generateWords to handle both normal + problems
+function generateWords(category) {
+  let manualString;
+  const cat = categories[category];
+
+  if (typeof cat === "string") {
+    // Normal command category
+    document.getElementById("question-box").textContent = ""; // no question
+    manualString = cat;
+  } else if (typeof cat === "object") {
+    // Problem set: show question
+    document.getElementById("question-box").textContent = cat.question;
+    manualString = cat.answer;
+  }
+
+  words = manualString.trim().split("\n").map(line => line.split(" "));
+}
+
 
     function renderWords() {
       testBox.innerHTML = '';
@@ -358,17 +424,46 @@ input.addEventListener('keydown', (e) => {
   }
 
   // BACKSPACE
-  if (e.key === 'Backspace') {
-    e.preventDefault();
+  // BACKSPACE
+if (e.key === 'Backspace') {
+  e.preventDefault();
+
+  if (e.ctrlKey) {
+    // CTRL+BACKSPACE → delete entire word & go to previous word
+    if (currentCharIndex > 0) {
+      // delete current word entirely
+      const chars = wordSpan.querySelectorAll('.char');
+      for (let ci = 0; ci < currentCharIndex; ci++) {
+        chars[ci].classList.remove('correct', 'incorrect');
+      }
+      typedChars[currentWordIndex] = [];
+      currentCharIndex = 0;
+    } else if (currentWordIndex > 0) {
+      // move to previous word
+      currentWordIndex--;
+      const prevWordSpan = document.querySelectorAll('.word')[currentWordIndex];
+      const prevWord = flatWords[currentWordIndex];
+      currentCharIndex = typedChars[currentWordIndex].length;
+      // clear previous word fully
+      typedChars[currentWordIndex] = [];
+      prevWordSpan.querySelectorAll('.char').forEach(c => {
+        c.classList.remove('correct', 'incorrect');
+      });
+    }
+  } else {
+    // Normal backspace (single character)
     if (currentCharIndex > 0) {
       currentCharIndex--;
       typedChars[currentWordIndex].pop();
       chars[currentCharIndex].classList.remove('correct', 'incorrect');
     }
-    highlightActiveChar();
-    updateLiveStats();
-    return;
   }
+
+  highlightActiveChar();
+  updateLiveStats();
+  return;
+}
+
 
   // Normal character typing
   if (e.key.length === 1) {
@@ -425,6 +520,57 @@ input.addEventListener('keydown', (e) => {
 
     window.onload = () => startTest("basics");
     document.body.addEventListener('click', () => input.focus());
+
+  // --- ADD THIS FUNCTION TO SHOW FINAL POPUP ---
+function showResultPopup(wpm, accuracy) {
+  const modal = document.createElement("div");
+  modal.id = "result-modal";
+  modal.style.position = "fixed";
+  modal.style.top = "0";
+  modal.style.left = "0";
+  modal.style.width = "100%";
+  modal.style.height = "100%";
+  modal.style.background = "rgba(0,0,0,0.8)";
+  modal.style.display = "flex";
+  modal.style.alignItems = "center";
+  modal.style.justifyContent = "center";
+  modal.style.zIndex = "9999";
+
+  modal.innerHTML = `
+    <div style="background:#1e1e1e; color:#FFE8DB; padding:30px; border-radius:12px; text-align:center; max-width:400px;">
+      <h2 style="margin-bottom:15px;">Test Completed 🎉</h2>
+      <p><strong>WPM:</strong> ${wpm}</p>
+      <p><strong>Accuracy:</strong> ${accuracy}%</p>
+      <p style="margin:15px 0;">${
+        accuracy >= 90
+          ? "🔥 Excellent work!"
+          : accuracy >= 70
+          ? "💪 Good job, keep improving!"
+          : "🚀 Keep practicing, you'll get faster!"
+      }</p>
+      <button id="restart-test" style="margin-top:15px; padding:10px 20px; background:#5682B1; color:#fff; border:none; border-radius:8px; cursor:pointer;">
+        Restart
+      </button>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  document.getElementById("restart-test").addEventListener("click", () => {
+    document.body.removeChild(modal);
+    startTest();
+  });
+}
+
+// --- UPDATE endTest() TO SHOW POPUP ---
+function endTest() {
+  testEnded = true;
+  input.disabled = true;
+  input.blur();
+  const { wpm, accuracy } = calculateStats();
+  showResultPopup(wpm, accuracy);
+}
+
   </script>
 
 </body>
