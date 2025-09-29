@@ -252,30 +252,30 @@
   // Categories (Normal + Problem Sets)
   const categories = {
     basics: `
-  git init
-  git status
-  git add .
-  git commit -m "first commit"
-  git push origin main
-  git push -u origin main
+  git init 
+git status
+git add .
+git commit -m "first commit"
+git push origin main
+git push -u origin main
     `,
     push: `
-  git pull origin main
-  git fetch origin
-  git branch -d feature
-  git branch -D feature
-  git push origin --delete feature
-    `,
+git pull origin main
+git fetch origin
+git branch -d feature
+git branch -D feature
+git push origin --delete feature
+  `,
     terminal: `
   ls
-  pwd 
-  cd Desktop
-  git bash
-  mkdir directoryName
-  touch index.html
-  touch style.css
-  touch app.js
-  rmdir directoryName
+pwd 
+cd Desktop
+git bash
+mkdir directoryName
+touch index.html
+touch style.css
+touch app.js
+rmdir directoryName
     `,
     // Problem Sets
     problems: {
@@ -333,11 +333,12 @@
       });
 
       // 👇 instead of raw text space, add a span
-      const spaceSpan = document.createElement('span');
-      spaceSpan.className = 'char space';
-      spaceSpan.innerText = '·'; // show middle dot as visual space, or "␣"
-      spaceSpan.style.opacity = 0.5;
-      wordSpan.appendChild(spaceSpan);
+      // invisible space (still counts as character)
+const spaceSpan = document.createElement('span');
+spaceSpan.className = 'char space';
+spaceSpan.innerText = ' '; // normal space, invisible
+wordSpan.appendChild(spaceSpan);
+
 
       testBox.appendChild(wordSpan);
       typedChars.push([]);
@@ -581,15 +582,15 @@ if (e.key === " ") {
 
     modal.innerHTML = `
       <div style="background:#1e1e1e; color:#FFE8DB; padding:30px; border-radius:12px; text-align:center; max-width:400px;">
-        <h2 style="margin-bottom:15px;">Test Completed 🎉</h2>
+        <h2 style="margin-bottom:15px;">Test Completed</h2>
         <p><strong>WPM:</strong> ${wpm}</p>
         <p><strong>Accuracy:</strong> ${accuracy}%</p>
         <p style="margin:15px 0;">${
           accuracy >= 90
             ? "🔥 Excellent work!"
             : accuracy >= 70
-            ? "💪 Good job, keep improving!"
-            : "🚀 Keep practicing, you'll get faster!"
+            ? "Good job, keep improving!"
+            : "Keep practicing, you'll get faster!"
         }</p>
         <button id="restart-test" style="margin-top:15px; padding:10px 20px; background:#5682B1; color:#fff; border:none; border-radius:8px; cursor:pointer;">
           Restart
