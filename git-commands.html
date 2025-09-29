@@ -173,11 +173,19 @@
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
+
   }
+#backgroundVideo{
+  filter:contrast(1.2);
+}  
 
     </style>
   </head>
   <body>
+    <video autoplay muted loop id="backgroundVideo" >
+    <source src="media/test_bg.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
 
     <header>
       <a href="index.html" id="Logo">SwiftKeys</a>
@@ -199,14 +207,14 @@
   
 
     <h3>Problem Sets</h3>
-    <button onclick="loadCategory('problems')">Problem Set 1</button>
-    <button onclick="loadCategory('problems2')">Problem Set 2</button>
-    <button onclick="loadCategory('branching')">Branching</button>
-    <button onclick="loadCategory('merging')">Merging</button>
-    <button onclick="loadCategory('rebase')">Rebase</button>
-    <button onclick="loadCategory('stash')">Stash</button>
-    <button onclick="loadCategory('config')">Config</button>
-    <button onclick="loadCategory('remote')">Remote</button>
+    <button onclick="loadCategory('problems')">Problem 1</button>
+    <button onclick="loadCategory('problems2')">Problem 2</button>
+    <button onclick="loadCategory('branching')">Problem 3</button>
+    <button onclick="loadCategory('merging')">Problem 4</button>
+    <button onclick="loadCategory('rebase')">Problem 5</button>
+    <button onclick="loadCategory('stash')">Problem 6</button>
+    <button onclick="loadCategory('config')">Problem 7</button>
+    <button onclick="loadCategory('remote')">Problem 8</button>
   </div>
 
 
@@ -360,26 +368,37 @@ wordSpan.appendChild(spaceSpan);
         testBox.scrollTop = testBox.scrollHeight;
       }
 
-      function calculateStats() {
-        let totalTyped = 0;
-        let correct = 0;
-        const flatWords = words.flat();
+          function calculateStats() {
+      let totalTyped = 0;
+      let correct = 0;
 
-        for (let wi = 0; wi < typedChars.length; wi++) {
-          const typedWord = typedChars[wi];
-          const actualWord = flatWords[wi];
-          for (let ci = 0; ci < typedWord.length; ci++) {
-            totalTyped++;
-            if (actualWord[ci] === typedWord[ci]) correct++;
-          }
+      const flatWords = words.flat(); // array of words
+
+      for (let wi = 0; wi < typedChars.length; wi++) {
+        const typedWord = typedChars[wi];
+        const actualWord = flatWords[wi];
+        for (let ci = 0; ci < typedWord.length; ci++) {
+          totalTyped++;
+          if (actualWord && typedWord[ci] === actualWord[ci]) correct++;
         }
-
-        const timeElapsed = (Date.now() - startTime) / 1000 / 60;
-        const wpm = timeElapsed > 0 ? Math.round((correct / 5) / timeElapsed) : 0;
-        const accuracy = totalTyped > 0 ? Math.round((correct / totalTyped) * 100) : 100;
-
-        return { wpm, accuracy };
       }
+
+      // add untyped characters as incorrect
+      for (let wi = 0; wi < flatWords.length; wi++) {
+        const actualWord = flatWords[wi];
+        const typedWord = typedChars[wi] || [];
+        for (let ci = typedWord.length; ci < actualWord.length; ci++) {
+          totalTyped++;
+        }
+      }
+
+      const timeElapsed = (Date.now() - startTime) / 1000 / 60; // minutes
+      const wpm = timeElapsed > 0 ? Math.round((correct / 5) / timeElapsed) : 0;
+      const accuracy = totalTyped > 0 ? Math.round((correct / totalTyped) * 100) : 100;
+
+      return { wpm, accuracy };
+    }
+
 
       function updateLiveStats() {
         const { wpm, accuracy } = calculateStats();
@@ -614,6 +633,9 @@ if (e.key === " ") {
     const { wpm, accuracy } = calculateStats();
     showResultPopup(wpm, accuracy);
   }
+
+  const video = document.getElementById('backgroundVideo');
+  video.playbackRate = 0.8;                //Video speed controls
 
     </script>
 
