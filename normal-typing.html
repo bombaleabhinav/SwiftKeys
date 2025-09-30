@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Git Typing Practice</title>
+  <link rel="stylesheet" href="style/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: black;
+      color: #FFE8DB;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      z-index: 2;
+      flex-shrink: 0;
+    }
+
+    header a {
+      color: #FFE8DB;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    #content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    #sidebar {
+      width: 220px;
+      background-color: transparent;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-right: 1px solid transparent;
+      flex-shrink: 0;
+      overflow-y: auto;
+      max-height: calc(100vh - 60px);
+    }
+
+    #sidebar h3 {
+      color: #FFE8DB;
+      font-size: 18px;
+      margin: 15px 0 8px;
+      font-weight: bold;
+      border-bottom: 1px solid #444;
+      padding-bottom: 4px;
+    }
+
+    #sidebar button {
+      background: #2a2a2a;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      color: #FFE8DB;
+      cursor: pointer;
+      text-align: left;
+      font-size: 16px;
+      transition: background 0.2s;
+    }
+
+    #sidebar button:hover,
+    #sidebar button:focus {
+      background: #5682B1;
+      outline: none;
+    }
+
+    #main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    #test-box {
+      max-width: 80vw;
+      width: 100%;
+      text-align: left;
+      font-size: 32px;      
+      line-height: 2;
+      word-wrap: break-word;
+      margin-bottom: 20px;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      max-height: 65vh;
+      padding: 20px;
+    }
+
+    .word { margin-right: 15px; }
+
+    .char {
+      display: inline-block;
+      font-weight: bold;
+      opacity: 0.7;
+      transition: all 0.2s ease;
+    }
+
+    .char.correct {
+      color: #EFBF04;
+      opacity: 1;
+      text-shadow: 0 0 8px #EFBF04;
+    }
+    
+    .char.incorrect {
+      color: #f44336;
+      opacity: 1;
+      text-shadow: none;
+    }
+    
+    .char.active {
+      position: relative;
+      opacity: 1;
+      text-shadow: 0 0 10px #ffffff;
+    }
+
+    .char.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      height: 3px;
+      width: 100%;
+      background: linear-gradient(90deg, #5682B1, #739EC9);
+    }
+
+    #input { opacity: 0; position: absolute; }
+
+    #live-stats {
+      margin-bottom: 15px;
+      font-size: 20px;
+      color: #FFE8DB;
+    }
+
+    #redo-btn {
+      background: transparent;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #FFE8DB;
+      font-size: 20px;
+      margin-top: 12px;
+      transition: background 0.2s;
+    }
+    #redo-btn:hover,
+    #redo-btn:focus {
+      background: #5682B1;
+      outline: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+    }
+    #backgroundVideo {
+      filter:contrast(1.2);
+    }
+
+    /* --- ⭐ MODIFIED PARTICLE STYLES ⭐ --- */
+    #particle-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      will-change: transform, opacity;
+      box-shadow: none; 
+    }
+  </style>
+</head>
+<body>
+  <video autoplay muted loop id="backgroundVideo" >
+    <source src="media/test_bg.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+  
+  <div id="particle-container"></div>
+
+  <audio id="correct-key-sound" src="media/sample.mp3" preload="auto"></audio>
+  <audio id="incorrect-key-sound" src="media/incorrect1.mp3" preload="auto"></audio>
+
+  <header>
+    <a href="index.html" id="Logo">SwiftKeys</a>
+    <nav>
+      <a href="index.html" class="navigation">Home</a>
+      <a href="test.html" class="navigation">Test</a>
+      <a href="contact.html" class="navigation">Contact</a>
+    </nav>
+  </header>
+
+  <div id="content">
+    <div id="main">
+      <div id="question-box" style="font-size:20px; margin-bottom:15px; text-align:center; color:#FFE8DB;"></div>
+      <div id="test-box"></div>
+      <input type="text" id="input" autofocus />
+      <div id="live-stats">
+        <p>
+          <strong>WPM:</strong> <span id="live-wpm">0</span>
+          &nbsp;
+          <strong>Accuracy:</strong> <span id="live-accuracy">0</span>%
+        </p>
+      </div>
+      <button id="redo-btn" tabindex="0"><i class="fas fa-redo"></i></button>
+    </div>
+  </div>
+
+  <footer id="footer">
+    Made with &hearts; by <a href="https://github.com/bombaleabhinav">Abhinav</a>
+  </footer>
+
+  <script>
+  const testBox = document.getElementById("test-box");
+  const input = document.getElementById("input");
+  const liveWpmDisplay = document.getElementById("live-wpm");
+  const liveAccDisplay = document.getElementById("live-accuracy");
+  const redoBtn = document.getElementById("redo-btn");
+
+  const correctKeySound = document.getElementById('correct-key-sound');
+  const incorrectKeySound = document.getElementById('incorrect-key-sound');
+
+  let words = [];
+  let typedChars = [];
+  let currentWordIndex = 0;
+  let currentCharIndex = 0;
+  let startTime = null;
+  let testEnded = false;
+  let currentCategory = "basics";
+
+  function fadeOutAudio(audio, duration = 500) {
+  let fadeSteps = 20; // smoother fade if higher
+  let stepTime = duration / fadeSteps;
+  let stepSize = audio.volume / fadeSteps;
+  
+  let fadeInterval = setInterval(() => {
+    if (audio.volume - stepSize > 0) {
+      audio.volume -= stepSize;
+    } else {
+      audio.volume = 0;
+      audio.pause();
+      clearInterval(fadeInterval);
+    }
+  }, stepTime);
+}
+
+
+  // --- 🎵 Typing Sound Logic ---
+let typingTimeout;
+let resumeTimeout;
+
+// Fade out function
+function fadeOutAudio(audio, duration = 700) {
+  let fadeSteps = 20;
+  let stepTime = duration / fadeSteps;
+  let stepSize = audio.volume / fadeSteps;
+
+  let fadeInterval = setInterval(() => {
+    if (audio.volume - stepSize > 0) {
+      audio.volume -= stepSize;
+    } else {
+      audio.volume = 0;
+      audio.pause();
+      clearInterval(fadeInterval);
+    }
+  }, stepTime);
+}
+
+// Handle correct typing sound
+function handleTypingSound() {
+  if (correctKeySound.paused) {
+    correctKeySound.volume = 1;
+    correctKeySound.play().catch(e => console.log("Autoplay blocked:", e));
+  }
+
+  clearTimeout(typingTimeout);
+
+  typingTimeout = setTimeout(() => {
+    fadeOutAudio(correctKeySound, 700);
+  }, 500); // inactivity delay
+}
+
+// Handle incorrect typing sound
+function handleIncorrectSound() {
+  // Pause correct sound immediately
+  if (!correctKeySound.paused) {
+    correctKeySound.pause();
+  }
+
+  // Play incorrect key sound
+  incorrectKeySound.currentTime = 0;
+  incorrectKeySound.play();
+
+  // Clear any old resume timer
+  clearTimeout(resumeTimeout);
+
+  // Resume correct sound after 1 second
+  resumeTimeout = setTimeout(() => {
+    correctKeySound.play().catch(e => console.log("Resume blocked:", e));
+  }, 600);
+}
+
+
+
+  const categories = {
+    basics: `the quick brown fox jumps over the lazy dog typing fast requires focus accuracy and rhythm practice every day to improve your typing speed coding is easier when your hands know the keys well mistakes slow you down so learn to type with care`,
+    push: `git pull origin main\ngit fetch origin\ngit branch -d feature\ngit branch -D feature\ngit push origin --delete feature`,
+    terminal: `ls\npwd\ncd Desktop\ngit bash\nmkdir directoryName\ntouch index.html\ntouch style.css\ntouch app.js\nrmdir directoryName`,
+    problems: {
+      question: "Q1: Initialize a Git repo and make your first commit.",
+      answer: `git init\ngit add .\ngit commit -m "first commit"`
+    },
+    problems2: {
+      question: "Q2: Create a new branch called 'feature' and push it to remote.",
+      answer: `git checkout -b feature\ngit push origin feature`
+    }
+  };
+
+  // --- ⭐ Particle Engine (unchanged) ⭐ ---
+  const particleContainer = document.getElementById('particle-container');
+  let particles = [];
+  let animationFrameId = null;
+
+  function createParticle(x, y, isCorrect, isMist = false) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particleContainer.appendChild(particle);
+
+      let size, color, life, vx, vy;
+
+      if (isMist) {
+          size = Math.random() * 2.5 + 1.5;
+          color = 'rgba(255, 255, 255, 0.4)';
+          life = 2800 + Math.random() * 1000;
+          vx = (Math.random() - 0.5) * 0.4;
+          vy = -Math.random() * 0.8 - 0.4;
+      } else {
+          size = isCorrect ? Math.random() * 2.5 + 2 : Math.random() * 3 + 2;
+          color = isCorrect ? '#EFBF04' : '#f44336';
+          life = isCorrect ? 2200 + Math.random() * 600 : 700;
+          vx = (Math.random() - 0.5) * 0.8;
+          vy = -Math.random() * 1.5 - 1;
+      }
+      
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      particle.style.backgroundColor = color;
+      
+      particles.push({
+          element: particle,
+          x: x,
+          y: y,
+          vx: vx,
+          vy: vy,
+          life: life,
+          initialLife: life,
+      });
+  }
+
+  function spawnParticlesAtChar(charElement, isCorrect) {
+      if (!charElement) return;
+
+      const rect = charElement.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      
+      if (isCorrect) {
+          const goldenCount = 25 + Math.floor(Math.random() * 10);
+          for (let i = 0; i < goldenCount; i++) createParticle(x, y, true);
+          const mistCount = 15 + Math.floor(Math.random() * 5);
+          for (let i = 0; i < mistCount; i++) createParticle(x, y, true, true);
+      } else {
+          const incorrectCount = 15;
+          for (let i = 0; i < incorrectCount; i++) createParticle(x, y, false);
+      }
+
+      if (!animationFrameId) animateParticles();
+  }
+
+  function animateParticles() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.life -= 16;
+
+          if (p.life <= 0) {
+              p.element.remove();
+              particles.splice(i, 1);
+              continue;
+          }
+
+          const opacity = p.life / p.initialLife;
+          p.element.style.transform = `translate(${p.x}px, ${p.y}px)`;
+          p.element.style.opacity = opacity;
+      }
+
+      if (particles.length > 0) {
+          animationFrameId = requestAnimationFrame(animateParticles);
+      } else {
+          animationFrameId = null;
+      }
+  }
+  // --- End Particle Engine ---
+
+  function generateWords(category) {
+    let manualString;
+    const cat = categories[category];
+
+    if (typeof cat === "string") {
+      document.getElementById("question-box").textContent = "";
+      manualString = cat;
+    } else if (typeof cat === "object") {
+      document.getElementById("question-box").textContent = cat.question;
+      manualString = cat.answer;
+    }
+    words = manualString.trim().split("\n").filter(line => line.trim() !== "").map(line => line.trim().split(" "));
+  }
+
+  function renderWords() {
+    testBox.innerHTML = '';
+    const flatWordCount = words.flat().filter(w => w !== '').length;
+    typedChars = new Array(flatWordCount).fill(null).map(() => []);
+
+    words.forEach((line) => {
+      line.forEach((word) => {
+        if (word === '') return;
+        const wordSpan = document.createElement('span');
+        wordSpan.className = 'word';
+
+        [...word].forEach((char) => {
+          const charSpan = document.createElement('span');
+          charSpan.className = 'char';
+          charSpan.innerText = char;
+          wordSpan.appendChild(charSpan);
+        });
+
+        const spaceSpan = document.createElement('span');
+        spaceSpan.className = 'char space';
+        spaceSpan.innerText = ' ';
+        wordSpan.appendChild(spaceSpan);
+
+        testBox.appendChild(wordSpan);
+      });
+      testBox.appendChild(document.createElement("br"));
+    });
+  }
+
+  function highlightActiveChar() {
+    document.querySelectorAll('.char.active').forEach(c => c.classList.remove('active'));
+    const allWordSpans = document.querySelectorAll('.word');
+
+    if (currentWordIndex < allWordSpans.length) {
+        const wordSpan = allWordSpans[currentWordIndex];
+        const charSpan = wordSpan.children[currentCharIndex];
+        if (charSpan) {
+            charSpan.classList.add('active');
+            charSpan.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }
+  }
+  
+  function calculateStats() {
+    if (!startTime) return { wpm: 0, accuracy: 100 };
+    const timeElapsed = (Date.now() - startTime) / 1000 / 60;
+    if (timeElapsed === 0) return { wpm: 0, accuracy: 100 };
+
+    const flatWords = words.flat().filter(w => w !== '');
+    let correctChars = 0;
+    let typedEntries = 0;
+
+    flatWords.forEach((actualWord, wordIndex) => {
+        const typedWord = typedChars[wordIndex] || [];
+        typedEntries += typedWord.length;
+        typedWord.forEach((typedChar, charIndex) => {
+            if (charIndex < actualWord.length && typedChar === actualWord[charIndex]) correctChars++;
+        });
+    });
+    
+    const wpm = Math.round((correctChars / 5) / timeElapsed);
+    const accuracy = typedEntries > 0 ? Math.round((correctChars / typedEntries) * 100) : 100;
+
+    return { wpm, accuracy };
+  }
+
+  function updateLiveStats() {
+    if (testEnded || !startTime) return;
+    const { wpm, accuracy } = calculateStats();
+    liveWpmDisfa.textContent = wpm;
+    liveAccDisplay.textContent = accuracy;
+  }
+
+  function endTest() {
+    if (testEnded) return;
+    testEnded = true;
+    input.disabled = true;
+    input.blur();
+    const { wpm, accuracy } = calculateStats();
+    showResultPopup(wpm, accuracy);
+    correctKeySound.pause(); // stop background music when test ends
+  }
+
+  input.addEventListener('keydown', (e) => {
+    if (testEnded) return;
+    if (!startTime) startTime = Date.now();
+
+    const flatWords = words.flat().filter(w => w !== '');
+    if (currentWordIndex >= flatWords.length) {
+        endTest();
+        return;
+    }
+    
+    const currentWord = flatWords[currentWordIndex];
+    const wordSpan = document.querySelectorAll('.word')[currentWordIndex];
+    const chars = wordSpan.querySelectorAll('.char');
+
+    if (e.key === 'Backspace') {
+      e.preventDefault();
+      if (e.ctrlKey) {
+          if (currentCharIndex > 0) {
+              for(let i = 0; i < currentCharIndex; i++) chars[i].classList.remove('correct', 'incorrect');
+              typedChars[currentWordIndex] = [];
+              currentCharIndex = 0;
+          } else if (currentWordIndex > 0) {
+              currentWordIndex--;
+              const prevWordSpan = document.querySelectorAll('.word')[currentWordIndex];
+              prevWordSpan.querySelectorAll('.char').forEach(c => c.classList.remove('correct', 'incorrect'));
+              typedChars[currentWordIndex] = [];
+              currentCharIndex = 0;
+          }
+      } else {
+          if (currentCharIndex > 0) {
+              currentCharIndex--;
+              typedChars[currentWordIndex].pop();
+              chars[currentCharIndex].classList.remove('correct', 'incorrect');
+          } else if (currentWordIndex > 0) {
+              currentWordIndex--;
+              currentCharIndex = typedChars[currentWordIndex].length;
+          }
+      }
+    }
+    else if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      if (currentCharIndex === 0 && typedChars[currentWordIndex].length === 0) return;
+
+      if (currentCharIndex < currentWord.length) {
+          for (let i = currentCharIndex; i < currentWord.length; i++) chars[i].classList.add('incorrect');
+      }
+
+      const spaceCharSpan = chars[chars.length - 1];
+      spawnParticlesAtChar(spaceCharSpan, true);
+      handleTypingSound();
+
+      currentWordIndex++;
+      currentCharIndex = 0;
+      
+      if (currentWordIndex >= flatWords.length) endTest();
+    }
+    else if (e.key.length === 1 && !e.ctrlKey && !e.altKey) {
+        if (currentCharIndex >= currentWord.length) return;
+
+        const char = e.key;
+        const expectedChar = currentWord[currentCharIndex];
+        const charSpan = chars[currentCharIndex];
+        
+        typedChars[currentWordIndex].push(char);
+        let isCorrect = false;
+
+        if (char === expectedChar) {
+            charSpan.classList.add('correct');
+            charSpan.classList.remove('incorrect');
+            isCorrect = true;
+            handleTypingSound(); // 🎵 use new sound logic
+        } else {
+            charSpan.classList.add('incorrect');
+            charSpan.classList.remove('correct');
+            incorrectKeySound.currentTime = 0;
+            incorrectKeySound.play().catch(()=>{});
+        }
+        
+        spawnParticlesAtChar(charSpan, isCorrect);
+        currentCharIndex++;
+
+        if (currentWordIndex === flatWords.length - 1 && currentCharIndex === currentWord.length) endTest();
+    }
+
+    highlightActiveChar();
+    updateLiveStats();
+  });
+
+  function startTest(category = "basics") {
+    generateWords(category);
+    renderWords();
+    currentWordIndex = 0;
+    currentCharIndex = 0;
+    startTime = null;
+    testEnded = false;
+    input.value = '';
+    input.disabled = false;
+    input.focus();
+    highlightActiveChar();
+    liveWpmDisplay.textContent = '0';
+    liveAccDisplay.textContent = '0';
+    correctKeySound.pause(); // reset music at start
+  }
+
+  function loadCategory(category) {
+    currentCategory = category;
+    startTest(category);
+  }
+
+  redoBtn.addEventListener("click", () => startTest(currentCategory));
+  redoBtn.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") startTest(currentCategory);
+  });
+
+  window.onload = () => startTest("basics");
+  document.body.addEventListener('click', () => input.focus());
+
+  function showResultPopup(wpm, accuracy) {
+    const modal = document.createElement("div");
+    modal.id = "result-modal";
+    modal.style.position = "fixed";
+    modal.style.top = "0";
+    modal.style.left = "0";
+    modal.style.width = "100%";
+    modal.style.height = "100%";
+    modal.style.background = "rgba(0,0,0,0.8)";
+    modal.style.display = "flex";
+    modal.style.alignItems = "center";
+    modal.style.justifyContent = "center";
+    modal.style.zIndex = "9999";
+
+    modal.innerHTML = `
+      <div style="background:#1e1e1e; color:#FFE8DB; padding:30px; border-radius:12px; text-align:center; max-width:400px; z-index:10000;">
+        <h2 style="margin-bottom:15px;">Test Completed</h2>
+        <p><strong>WPM:</strong> ${wpm}</p>
+        <p><strong>Accuracy:</strong> ${accuracy}%</p>
+        <p style="margin:15px 0;">${
+          accuracy >= 90
+            ? "Excellent work! 🚀"
+            : accuracy >= 70
+            ? "Good job, keep improving! 👍"
+            : "Keep practicing, you'll get faster! 💪"
+        }</p>
+        <button id="restart-test-btn" style="margin-top:15px; padding:10px 20px; background:#5682B1; color:#fff; border:none; border-radius:8px; cursor:pointer;">
+          Restart
+        </button>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    document.getElementById("restart-test-btn").focus();
+    document.getElementById("restart-test-btn").addEventListener("click", () => {
+      document.body.removeChild(modal);
+      startTest(currentCategory);
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('result-modal');
+      if (modal && e.shiftKey && e.key === 'Enter') {
+          e.preventDefault();
+          document.body.removeChild(modal);
+          startTest(currentCategory);
+      }
+  });
+  
+  const video = document.getElementById('backgroundVideo');
+  if (video) {
+      video.playbackRate = 0.8;
+  }
+</script>
+
+</body>
+</html>

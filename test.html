@@ -2,15 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Typing Test</title>
   <link rel="stylesheet" href="style/style.css" />
   <style>
     /* Existing styles omitted for brevity... */
 
-    /* Add block container styling */
-   /* Grid layout for blocks */
-    /* Full-width grid layout */
+    /* Grid layout for blocks */
     .block-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -20,7 +18,7 @@
       box-sizing: border-box;
     }
 
-    /* Squarish clickable blocks */
+    /* Original squarish clickable blocks styling */
     .clickable-block {
       background-color: transparent;
       color: #FFE8DB;
@@ -28,23 +26,65 @@
       border-radius: 12px;
       aspect-ratio: 1 / 1; /* Makes the blocks square */
       display: flex;
+      flex-direction: column; /* Align content vertically */
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
-      font-weight: 500;
+      padding: 10px; /* Add padding inside the block */
       text-align: center;
       text-decoration: none;
       transition: all 0.3s ease;
       box-shadow: 0 0 10px transparent;
     }
 
+    /* Style for the content container */
+    .block-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Style for the main title */
+    .block-title {
+        font-size: 1.8rem; /* Slightly smaller for better fit */
+        font-weight: 500;
+        margin-bottom: 5px; /* Space between title and description */
+    }
+
+    /* Style for the description text */
+    .block-description {
+        font-size: 0.9rem;
+        font-weight: 300;
+        color: rgba(255, 232, 219, 0.7); /* Slightly muted color for description */
+        padding: 0 15px; /* Horizontal padding for description */
+    }
+
+    /* Original hover effect */
     .clickable-block:hover {
-      background: linear-gradient(45deg ,#5682B1);
+      background: linear-gradient(45deg, #5682B1, #3b638b);
       box-shadow: 0 0 14px #000;
       color: black;
       transform: translateY(-10px);
     }
+    
+    /* Ensure description color changes on hover for better contrast */
+    .clickable-block:hover .block-description {
+        color: rgba(0, 0, 0, 0.8);
+    }
 
+
+
+    /* Apply the glowing animation on hover for blocks with the 'rgb-glow' class */
+    .clickable-block.rgb-glow:hover {
+      /* Re-apply non-glow hover styles */
+      background: linear-gradient(45deg, #5682B1, #3b638b);
+      color: black;
+      /* Now apply the animation to the box-shadow */
+      animation: rgb-glow 2.5s linear infinite;
+    }
+    
     /* Responsive layout */
     @media (max-width: 992px) {
       .block-grid {
@@ -56,18 +96,17 @@
       .block-grid {
         grid-template-columns: 1fr;
       }
-
-      .clickable-block {
-        font-size: 1.2rem;
+      .block-title {
+        font-size: 1.5rem;
+      }
+      .block-description {
+          font-size: 0.8rem;
       }
     }
-
-
-  </style>
+</style>
 </head>
 
 <body>
-  
   <video autoplay muted loop id="backgroundVideo">
     <source src="media/index_bg_4.mp4" type="video/mp4" />
     Your browser does not support the video tag.
@@ -83,14 +122,50 @@
   </header>
 
   <main>
-  <section class="block-grid">
-    <a href="git-commands.html" class="clickable-block">Git & Terminal Commands</a>
-    <a href="python-commands.html" class="clickable-block">Python Basics</a>
-    <a href="CPP-commands.html" class="clickable-block">C++ Basics</a>
-  </section>
-  </main>
-
-
+    <section class="block-grid">
+        <a href="normal-typing.html" class="clickable-block">
+            <div class="block-content">
+                <span class="block-title">Normal Typing Test</span>
+                <span class="block-description">Practice with common English words and quotes.</span>
+            </div>
+        </a>
+        
+        <a href="git-commands.html" class="clickable-block rgb-glow">
+            <div class="block-content">
+                <span class="block-title">Git & Terminal Commands</span>
+                <span class="block-description">Boost your speed with essential command line operations.</span>
+            </div>
+        </a>
+        
+        <a href="python-commands.html" class="clickable-block">
+            <div class="block-content">
+                <span class="block-title">Python Basics</span>
+                <span class="block-description">Code snippets for variables, loops, and functions.</span>
+            </div>
+        </a>
+        
+        <a href="CPP-commands.html" class="clickable-block">
+            <div class="block-content">
+                <span class="block-title">C++ Basics</span>
+                <span class="block-description">Type out fundamental C++ syntax and logic.</span>
+            </div>
+        </a>
+        
+        <a href="java-basics.html" class="clickable-block">
+            <div class="block-content">
+                <span class="block-title">Java Basics</span>
+                <span class="block-description">Practice core Java keywords and structures.</span>
+            </div>
+        </a>
+        
+        <a href="c-basics.html" class="clickable-block">
+            <div class="block-content">
+                <span class="block-title">C Basics</span>
+                <span class="block-description">Focus on C language fundamentals and headers.</span>
+            </div>
+        </a>
+    </section>
+</main>
 
   <footer id="footer">
     Made with &hearts; by <a href="https://github.com/bombaleabhinav">Abhinav</a>

@@ -112,30 +112,24 @@
 
     .char.correct { color: #4caf50; }
     .char.incorrect { color: #f44336; }
+    
+    /* --- ⭐ CORRECTED CSS RULES ⭐ --- */
     .char.active {
-      position: relative;
-      color: inherit;
-      background: transparent;
-      padding: 0 2px;
-    }
-
-    /* caret element using pseudo-element so caret is independent of text color */
-    .char.active {
-      position: relative;
-      background: transparent;
-      padding-bottom: 1px;
+        position: relative;
+        /* Padding has been removed to prevent movement */
     }
 
     /* animated underline that grows from left to right */
     .char.active::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 3px;
-      height: 3px;
-      width: 100%;
-      background: linear-gradient(90deg,#5682B1,#739EC9);
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -2px; /* Adjusted to sit just below the character */
+        height: 3px;
+        width: 100%;
+        background: linear-gradient(90deg, #5682B1, #739EC9);
     }
+    /* --- End of Correction --- */
 
 
     #input { opacity: 0; position: absolute; }
@@ -168,7 +162,7 @@
       text-align: center;
       padding: 10px;
       font-size: 14px;
-      position: fixed;      /* stick to bottom */
+      position: fixed;        /* stick to bottom */
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
@@ -200,7 +194,7 @@
     <div id="sidebar">
       <h3>Git Commands</h3>
       <button onclick="loadCategory('basics')">Basics</button>
-      <button onclick="loadCategory('push')">Push</button>
+      <button onclick="loadCategory('push')">Pull $amp; feature</button>
       <button onclick="loadCategory('terminal')">Terminal</button>
       
       <h3>Problem Sets</h3>
@@ -528,15 +522,15 @@ git push origin feature`
           <p><strong>Accuracy:</strong> ${accuracy}%</p>
           <p style="margin:15px 0;">${
             accuracy >= 90
-              ? "🔥 Excellent work!"
-              : accuracy >= 70
+              ? "Excellent work!"  // I dont understand the syntaxe
+              : accuracy >= 70     // But what it does is prints the final result box with quotes
               ? "Good job, keep improving!"
               : "Keep practicing, you'll get faster!"
           }</p>
           <button id="restart-test-btn" style="margin-top:15px; padding:10px 20px; background:#5682B1; color:#fff; border:none; border-radius:8px; cursor:pointer;">
             Restart
           </button>
-          <p style="font-size: 12px; color: #888; margin-top: 15px;">or press Shift + Enter</p>
+          <p style="font-size: 12px; color: #888; margin-top: 15px;"></p>
         </div>
       `;
 
