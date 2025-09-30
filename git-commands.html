@@ -1,643 +1,567 @@
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Git Typing Practice</title>
-    <link rel="stylesheet" href="style/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-      body {
-        margin: 0;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: black;
-        color: #FFE8DB;
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        overflow: hidden;
-      }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Git Typing Practice</title>
+  <link rel="stylesheet" href="style/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: black;
+      color: #FFE8DB;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-      header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 30px;
-        z-index: 2;
-        flex-shrink: 0;
-      }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      z-index: 2;
+      flex-shrink: 0;
+    }
 
-      header a {
-        color: #FFE8DB;
-        margin: 0 10px;
-        text-decoration: none;
-      }
+    header a {
+      color: #FFE8DB;
+      margin: 0 10px;
+      text-decoration: none;
+    }
 
-      /* Wrapper for sidebar + main */
-      #content {
-        display: flex;
-        flex: 1;
-        overflow: hidden;
-      }
+    /* Wrapper for sidebar + main */
+    #content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
 
-      /* Sidebar */
-      #sidebar {
-    width: 220px;
-    background-color: transparent;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    border-right: 1px solid transparent;
-    flex-shrink: 0;
-    overflow-y: auto;       /* <-- makes it scrollable if tall */
-    max-height: calc(100vh - 60px); /* keep inside viewport */
-  }
+    /* Sidebar */
+    #sidebar {
+      width: 220px;
+      background-color: transparent;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-right: 1px solid transparent;
+      flex-shrink: 0;
+      overflow-y: auto;      /* <-- makes it scrollable if tall */
+      max-height: calc(100vh - 60px); /* keep inside viewport */
+    }
 
-  #sidebar h3 {
-    color: #FFE8DB;
-    font-size: 18px;
-    margin: 15px 0 8px;
-    font-weight: bold;
-    border-bottom: 1px solid #444;
-    padding-bottom: 4px;
-  }
-
-
-      #sidebar button {
-        background: #2a2a2a;
-        border: none;
-        padding: 12px;
-        border-radius: 6px;
-        color: #FFE8DB;
-        cursor: pointer;
-        text-align: left;
-        font-size: 16px;
-        transition: background 0.2s;
-      }
-
-      #sidebar button:hover,
-      #sidebar button:focus {
-        background: #5682B1;
-        outline: none;
-      }
-
-      /* Main area */
-      #main {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        overflow: hidden;
-      }
-
-      #test-box {
-        max-width: 900px;
-        text-align: left;
-        font-size: 28px;          /* Increased font size */
-        line-height: 2;           /* Better spacing */
-        word-wrap: break-word;
-        margin-bottom: 20px;
-        white-space: pre-wrap;
-        overflow-y: auto;
-        max-height: 65vh;         /* Scroll if more than ~10 lines */
-        padding: 20px;
-      }
-
-      .word { margin-right: 12px; }
-
-      .char { display: inline-block; }
-
-      .char.correct { color: #4caf50; }
-      .char.incorrect { color: #f44336; }
-      .char.active {
-    position: relative;
-    color: inherit;
-    background: transparent;
-    padding: 0 2px;
-  }
-
-  /* caret element using pseudo-element so caret is independent of text color */
-  .char.active {
-    position: relative;
-    background: transparent;
-    padding-bottom: 1px;
-  }
-
-  /* animated underline that grows from left to right */
-  .char.active::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 3px;
-    height: 3px;
-    width: 100%;
-    background: linear-gradient(90deg,#5682B1,#739EC9);
-  }
+    #sidebar h3 {
+      color: #FFE8DB;
+      font-size: 18px;
+      margin: 15px 0 8px;
+      font-weight: bold;
+      border-bottom: 1px solid #444;
+      padding-bottom: 4px;
+    }
 
 
-      #input { opacity: 0; position: absolute; }
+    #sidebar button {
+      background: #2a2a2a;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      color: #FFE8DB;
+      cursor: pointer;
+      text-align: left;
+      font-size: 16px;
+      transition: background 0.2s;
+    }
 
-      #live-stats {
-        margin-bottom: 15px;
-        font-size: 20px;
-        color: #FFE8DB;
-      }
+    #sidebar button:hover,
+    #sidebar button:focus {
+      background: #5682B1;
+      outline: none;
+    }
 
-      /* Redo button */
-      #redo-btn {
-        background: transparent;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 6px;
-        cursor: pointer;
-        color: #FFE8DB;
-        font-size: 20px;
-        margin-top: 12px;
-        transition: background 0.2s;
-      }
-      #redo-btn:hover,
-      #redo-btn:focus {
-        background: #5682B1;
-        outline: none;
-      }
+    /* Main area */
+    #main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+    }
 
-      footer {
-    text-align: center;
-    padding: 10px;
-    font-size: 14px;
-    position: fixed;      /* stick to bottom */
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
+    #test-box {
+      max-width: 900px;
+      text-align: left;
+      font-size: 28px;        /* Increased font size */
+      line-height: 2;         /* Better spacing */
+      word-wrap: break-word;
+      margin-bottom: 20px;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      max-height: 65vh;       /* Scroll if more than ~10 lines */
+      padding: 20px;
+    }
 
-  }
-#backgroundVideo{
-  filter:contrast(1.2);
-}  
+    .word { margin-right: 12px; }
 
-    </style>
-  </head>
-  <body>
-    <video autoplay muted loop id="backgroundVideo" >
+    .char { display: inline-block; }
+
+    .char.correct { color: #4caf50; }
+    .char.incorrect { color: #f44336; }
+    .char.active {
+      position: relative;
+      color: inherit;
+      background: transparent;
+      padding: 0 2px;
+    }
+
+    /* caret element using pseudo-element so caret is independent of text color */
+    .char.active {
+      position: relative;
+      background: transparent;
+      padding-bottom: 1px;
+    }
+
+    /* animated underline that grows from left to right */
+    .char.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 3px;
+      height: 3px;
+      width: 100%;
+      background: linear-gradient(90deg,#5682B1,#739EC9);
+    }
+
+
+    #input { opacity: 0; position: absolute; }
+
+    #live-stats {
+      margin-bottom: 15px;
+      font-size: 20px;
+      color: #FFE8DB;
+    }
+
+    /* Redo button */
+    #redo-btn {
+      background: transparent;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #FFE8DB;
+      font-size: 20px;
+      margin-top: 12px;
+      transition: background 0.2s;
+    }
+    #redo-btn:hover,
+    #redo-btn:focus {
+      background: #5682B1;
+      outline: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+      position: fixed;      /* stick to bottom */
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+
+    }
+    #backgroundVideo{
+      filter:contrast(1.2);
+    }
+  </style>
+</head>
+<body>
+  <video autoplay muted loop id="backgroundVideo" >
     <source src="media/test_bg.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
 
-    <header>
-      <a href="index.html" id="Logo">SwiftKeys</a>
-      <nav>
-        <a href="index.html" class="navigation">Home</a>
-        <a href="test.html" class="navigation">Test</a>
-        <a href="contact.html" class="navigation">Contact</a>
-      </nav>
+  <header>
+    <a href="index.html" id="Logo">SwiftKeys</a>
+    <nav>
+      <a href="index.html" class="navigation">Home</a>
+      <a href="test.html" class="navigation">Test</a>
+      <a href="contact.html" class="navigation">Contact</a>
+    </nav>
+    
+  </header>
+
+  <div id="content">
+    <div id="sidebar">
+      <h3>Git Commands</h3>
+      <button onclick="loadCategory('basics')">Basics</button>
+      <button onclick="loadCategory('push')">Push</button>
+      <button onclick="loadCategory('terminal')">Terminal</button>
       
-    </header>
-
-    <div id="content">
-      <!-- Sidebar -->
-    <div id="sidebar">  
-    <h3>Git Commands</h3>
-    <button onclick="loadCategory('basics')">Basics</button>
-    <button onclick="loadCategory('push')">Push</button>
-    <button onclick="loadCategory('terminal')">Terminal</button>
-  
-
-    <h3>Problem Sets</h3>
-    <button onclick="loadCategory('problems')">Problem 1</button>
-    <button onclick="loadCategory('problems2')">Problem 2</button>
-    <button onclick="loadCategory('branching')">Problem 3</button>
-    <button onclick="loadCategory('merging')">Problem 4</button>
-    <button onclick="loadCategory('rebase')">Problem 5</button>
-    <button onclick="loadCategory('stash')">Problem 6</button>
-    <button onclick="loadCategory('config')">Problem 7</button>
-    <button onclick="loadCategory('remote')">Problem 8</button>
-  </div>
-
-
-
-      <!-- Main typing area -->
-    <!-- Add Question Box above typing box -->
-  <div id="main">
-    <div id="question-box" style="font-size:20px; margin-bottom:15px; text-align:center; color:#FFE8DB;"></div>
-    <div id="test-box"></div>
-    <input type="text" id="input" autofocus />
-    <div id="live-stats">
-      <p>
-        <strong>WPM:</strong> <span id="live-wpm">0</span>
-        &nbsp;
-        <strong>Accuracy:</strong> <span id="live-accuracy">0</span>%
-      </p>
+      <h3>Problem Sets</h3>
+      <button onclick="loadCategory('problems')">Problem 1</button>
+      <button onclick="loadCategory('problems2')">Problem 2</button>
+      <button onclick="loadCategory('branching')">Problem 3</button>
+      <button onclick="loadCategory('merging')">Problem 4</button>
+      <button onclick="loadCategory('rebase')">Problem 5</button>
+      <button onclick="loadCategory('stash')">Problem 6</button>
+      <button onclick="loadCategory('config')">Problem 7</button>
+      <button onclick="loadCategory('remote')">Problem 8</button>
     </div>
-    <button id="redo-btn" tabindex="0"><i class="fas fa-redo"></i></button>
+
+    <div id="main">
+      <div id="question-box" style="font-size:20px; margin-bottom:15px; text-align:center; color:#FFE8DB;"></div>
+      <div id="test-box"></div>
+      <input type="text" id="input" autofocus />
+      <div id="live-stats">
+        <p>
+          <strong>WPM:</strong> <span id="live-wpm">0</span>
+          &nbsp;
+          <strong>Accuracy:</strong> <span id="live-accuracy">0</span>%
+        </p>
+      </div>
+      <button id="redo-btn" tabindex="0"><i class="fas fa-redo"></i></button>
+    </div>
   </div>
 
+  <footer id="footer">
+    Made with &hearts; by <a href="https://github.com/bombaleabhinav">Abhinav</a>
+  </footer>
 
-    <footer id="footer">
-      Made with &hearts; by <a href="https://github.com/bombaleabhinav">Abhinav</a>
-    </footer>
+  <script>
+    const testBox = document.getElementById("test-box");
+    const input = document.getElementById("input");
+    const liveWpmDisplay = document.getElementById("live-wpm");
+    const liveAccDisplay = document.getElementById("live-accuracy");
+    const redoBtn = document.getElementById("redo-btn");
 
-    <script>
-      const testBox = document.getElementById("test-box");
-      const input = document.getElementById("input");
-      const liveWpmDisplay = document.getElementById("live-wpm");
-      const liveAccDisplay = document.getElementById("live-accuracy");
-      const redoBtn = document.getElementById("redo-btn");
+    let words = [];
+    let typedChars = [];
+    let currentWordIndex = 0;
+    let currentCharIndex = 0;
+    let startTime = null;
+    let testEnded = false;
+    let currentCategory = "basics"; // track active category
 
-      let words = [];
-      let typedChars = [];
-      let currentWordIndex = 0;
-      let currentCharIndex = 0;
-      let startTime = null;
-      let testEnded = false;
-      let currentCategory = "basics"; // track active category
-
-
-      // Categories
-  // Categories (Normal + Problem Sets)
-  const categories = {
-    basics: `
-  git init 
+    // Categories (Normal + Problem Sets)
+    const categories = {
+      basics: `git init
 git status
 git add .
 git commit -m "first commit"
 git push origin main
-git push -u origin main
-    `,
-    push: `
-git pull origin main
+git push -u origin main`,
+      push: `git pull origin main
 git fetch origin
 git branch -d feature
 git branch -D feature
-git push origin --delete feature
-  `,
-    terminal: `
-  ls
-pwd 
+git push origin --delete feature`,
+      terminal: `ls
+pwd
 cd Desktop
 git bash
 mkdir directoryName
 touch index.html
 touch style.css
 touch app.js
-rmdir directoryName
-    `,
-    // Problem Sets
-    problems: {
-      question: "Q1: Initialize a Git repo and make your first commit.",
-      answer: `
-  git init
-  git add .
-  git commit -m "first commit"
-      `
-    },
-    problems2: {
-      question: "Q2: Create a new branch called 'feature' and push it to remote.",
-      answer: `
-  git checkout -b feature
-  git push origin feature
-      `
-    }
-  };
+rmdir directoryName`,
+      // Problem Sets
+      problems: {
+        question: "Q1: Initialize a Git repo and make your first commit.",
+        answer: `git init
+git add .
+git commit -m "first commit"`
+      },
+      problems2: {
+        question: "Q2: Create a new branch called 'feature' and push it to remote.",
+        answer: `git checkout -b feature
+git push origin feature`
+      }
+    };
 
-  // Modify generateWords to handle both normal + problems
-  function generateWords(category) {
-    let manualString;
-    const cat = categories[category];
+    function generateWords(category) {
+      let manualString;
+      const cat = categories[category];
 
-    if (typeof cat === "string") {
-      // Normal command category
-      document.getElementById("question-box").textContent = ""; // no question
-      manualString = cat;
-    } else if (typeof cat === "object") {
-      // Problem set: show question
-      document.getElementById("question-box").textContent = cat.question;
-      manualString = cat.answer;
+      if (typeof cat === "string") {
+        document.getElementById("question-box").textContent = "";
+        manualString = cat;
+      } else if (typeof cat === "object") {
+        document.getElementById("question-box").textContent = cat.question;
+        manualString = cat.answer;
+      }
+      // Filter out empty lines that can result from extra newlines
+      words = manualString.trim().split("\n").filter(line => line.trim() !== "").map(line => line.trim().split(" "));
     }
 
-    words = manualString.trim().split("\n").map(line => line.split(" "));
-  }
 
+    function renderWords() {
+      testBox.innerHTML = '';
+      const flatWordCount = words.flat().filter(w => w !== '').length;
+      typedChars = new Array(flatWordCount).fill(null).map(() => []);
 
-      function renderWords() {
-  testBox.innerHTML = '';
-  typedChars = [];
+      words.forEach((line) => {
+        line.forEach((word) => {
+          if (word === '') return;
+          const wordSpan = document.createElement('span');
+          wordSpan.className = 'word';
 
-  words.forEach((line, li) => {
-    line.forEach((word, wi) => {
-      const wordSpan = document.createElement('span');
-      wordSpan.className = 'word';
-      wordSpan.setAttribute('data-word-index', `${li}-${wi}`);
+          [...word].forEach((char) => {
+            const charSpan = document.createElement('span');
+            charSpan.className = 'char';
+            charSpan.innerText = char;
+            wordSpan.appendChild(charSpan);
+          });
 
-      // add characters
-      [...word].forEach((char) => {
-        const charSpan = document.createElement('span');
-        charSpan.className = 'char';
-        charSpan.innerText = char;
-        wordSpan.appendChild(charSpan);
+          const spaceSpan = document.createElement('span');
+          spaceSpan.className = 'char space';
+          spaceSpan.innerText = ' ';
+          wordSpan.appendChild(spaceSpan);
+
+          testBox.appendChild(wordSpan);
+        });
+        testBox.appendChild(document.createElement("br"));
       });
+    }
 
-      // 👇 instead of raw text space, add a span
-      // invisible space (still counts as character)
-const spaceSpan = document.createElement('span');
-spaceSpan.className = 'char space';
-spaceSpan.innerText = ' '; // normal space, invisible
-wordSpan.appendChild(spaceSpan);
+    function highlightActiveChar() {
+      document.querySelectorAll('.char.active').forEach(c => c.classList.remove('active'));
+      const allWordSpans = document.querySelectorAll('.word');
 
-
-      testBox.appendChild(wordSpan);
-      typedChars.push([]);
-    });
-
-    // new line
-    testBox.appendChild(document.createElement("br"));
-  });
-}
-
-
-      function highlightActiveChar() {
-        document.querySelectorAll('.char.active').forEach(c => c.classList.remove('active'));
-        const wordSpan = document.querySelectorAll('.word')[currentWordIndex];
-        if (!wordSpan) return;
-        const charSpan = wordSpan.children[currentCharIndex] || wordSpan.lastChild;
-        if (charSpan) charSpan.classList.add('active');
-
-        testBox.scrollTop = testBox.scrollHeight;
+      if (currentWordIndex < allWordSpans.length) {
+          const wordSpan = allWordSpans[currentWordIndex];
+          const charSpan = wordSpan.children[currentCharIndex];
+          if (charSpan) {
+              charSpan.classList.add('active');
+              charSpan.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
       }
+    }
+    
+    // --- ⭐ NEW AND IMPROVED STATS CALCULATION ⭐ ---
+    function calculateStats() {
+      if (!startTime) return { wpm: 0, accuracy: 100 };
 
-          function calculateStats() {
-      let totalTyped = 0;
-      let correct = 0;
+      const timeElapsed = (Date.now() - startTime) / 1000 / 60; // in minutes
+      if (timeElapsed === 0) return { wpm: 0, accuracy: 100 };
 
-      const flatWords = words.flat(); // array of words
+      const flatWords = words.flat().filter(w => w !== '');
+      let correctChars = 0;
+      let typedEntries = 0;
 
-      for (let wi = 0; wi < typedChars.length; wi++) {
-        const typedWord = typedChars[wi];
-        const actualWord = flatWords[wi];
-        for (let ci = 0; ci < typedWord.length; ci++) {
-          totalTyped++;
-          if (actualWord && typedWord[ci] === actualWord[ci]) correct++;
-        }
-      }
+      flatWords.forEach((actualWord, wordIndex) => {
+          const typedWord = typedChars[wordIndex] || [];
+          typedEntries += typedWord.length;
 
-      // add untyped characters as incorrect
-      for (let wi = 0; wi < flatWords.length; wi++) {
-        const actualWord = flatWords[wi];
-        const typedWord = typedChars[wi] || [];
-        for (let ci = typedWord.length; ci < actualWord.length; ci++) {
-          totalTyped++;
-        }
-      }
+          typedWord.forEach((typedChar, charIndex) => {
+              if (charIndex < actualWord.length && typedChar === actualWord[charIndex]) {
+                  correctChars++;
+              }
+          });
+      });
+      
+      // Net WPM: (Correct Characters / 5) / Time (in Minutes). This is the standard.
+      const wpm = Math.round((correctChars / 5) / timeElapsed);
 
-      const timeElapsed = (Date.now() - startTime) / 1000 / 60; // minutes
-      const wpm = timeElapsed > 0 ? Math.round((correct / 5) / timeElapsed) : 0;
-      const accuracy = totalTyped > 0 ? Math.round((correct / totalTyped) * 100) : 100;
+      // Accuracy: (Correct Characters / Total Typed Characters) * 100
+      const accuracy = typedEntries > 0 ? Math.round((correctChars / typedEntries) * 100) : 100;
 
       return { wpm, accuracy };
     }
 
 
-      function updateLiveStats() {
-        const { wpm, accuracy } = calculateStats();
-        liveWpmDisplay.textContent = wpm;
-        liveAccDisplay.textContent = accuracy;
+    function updateLiveStats() {
+      if (testEnded || !startTime) return;
+      const { wpm, accuracy } = calculateStats();
+      liveWpmDisplay.textContent = wpm;
+      liveAccDisplay.textContent = accuracy;
+    }
+
+    function endTest() {
+      if (testEnded) return; // Prevent endTest from running multiple times
+      testEnded = true;
+      input.disabled = true;
+      input.blur();
+      const { wpm, accuracy } = calculateStats();
+      showResultPopup(wpm, accuracy);
+    }
+
+    input.addEventListener('keydown', (e) => {
+      if (testEnded) return;
+      if (!startTime) startTime = Date.now();
+
+      const flatWords = words.flat().filter(w => w !== '');
+      if (currentWordIndex >= flatWords.length) {
+          endTest();
+          return;
       }
+      
+      const currentWord = flatWords[currentWordIndex];
+      const wordSpan = document.querySelectorAll('.word')[currentWordIndex];
+      const chars = wordSpan.querySelectorAll('.char');
 
-      function endTest() {
-        testEnded = true;
-        input.disabled = true;
-        input.blur();
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        
+        if (e.ctrlKey) {
+            if (currentCharIndex > 0) {
+                for(let i = 0; i < currentCharIndex; i++) {
+                    chars[i].classList.remove('correct', 'incorrect');
+                }
+                typedChars[currentWordIndex] = [];
+                currentCharIndex = 0;
+            } else if (currentWordIndex > 0) {
+                currentWordIndex--;
+                const prevWordSpan = document.querySelectorAll('.word')[currentWordIndex];
+                prevWordSpan.querySelectorAll('.char').forEach(c => c.classList.remove('correct', 'incorrect'));
+                typedChars[currentWordIndex] = [];
+                currentCharIndex = 0;
+            }
+        } 
+        else {
+            if (currentCharIndex > 0) {
+                currentCharIndex--;
+                typedChars[currentWordIndex].pop();
+                chars[currentCharIndex].classList.remove('correct', 'incorrect');
+            } else if (currentWordIndex > 0) {
+                currentWordIndex--;
+                currentCharIndex = typedChars[currentWordIndex].length;
+            }
+        }
       }
+      else if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        if (currentCharIndex === 0 && typedChars[currentWordIndex].length === 0) return;
 
-      // Updated listener (Enter = next line, space = normal char)
-  // Updated listener (Space = next word, Enter = next line, normal typing works)
-  input.addEventListener('keydown', (e) => {
-    if (testEnded) return;
-    if (!startTime) startTime = Date.now();
-
-    const flatWords = words.flat();
-    const currentWord = flatWords[currentWordIndex];
-    const wordSpan = document.querySelectorAll('.word')[currentWordIndex];
-    const chars = wordSpan.querySelectorAll('.char');
-
-    // SPACE → move to next word in same line
-    if (e.key === ' ') {
-      e.preventDefault();
-      if (currentCharIndex >= currentWord.length) {
+        if (currentCharIndex < currentWord.length) {
+            for (let i = currentCharIndex; i < currentWord.length; i++) {
+                chars[i].classList.add('incorrect');
+            }
+        }
         currentWordIndex++;
         currentCharIndex = 0;
+        
         if (currentWordIndex >= flatWords.length) {
           endTest();
-        } else {
-          highlightActiveChar();
         }
       }
+      else if (e.key.length === 1 && !e.ctrlKey && !e.altKey) {
+          if (currentCharIndex >= currentWord.length) return;
+
+          const char = e.key;
+          const expectedChar = currentWord[currentCharIndex];
+          const charSpan = chars[currentCharIndex];
+          
+          typedChars[currentWordIndex].push(char);
+
+          if (char === expectedChar) {
+              charSpan.classList.add('correct');
+              charSpan.classList.remove('incorrect');
+          } else {
+              charSpan.classList.add('incorrect');
+              charSpan.classList.remove('correct');
+          }
+          currentCharIndex++;
+
+          // --- ⭐ BUG FIX: End test right after typing the last character ⭐ ---
+          if (currentWordIndex === flatWords.length - 1 && currentCharIndex === currentWord.length) {
+              endTest();
+          }
+      }
+
+      highlightActiveChar();
       updateLiveStats();
-      return;
-    }
-
-    // ENTER → move to next line
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      currentWordIndex++;
-      currentCharIndex = 0;
-      if (currentWordIndex >= flatWords.length) {
-        endTest();
-      } else {
-        highlightActiveChar();
-      }
-      updateLiveStats();
-      return;
-    }
-
-    // BACKSPACE
-    // BACKSPACE
-  if (e.key === 'Backspace') {
-    e.preventDefault();
-
-    if (e.ctrlKey) {
-      // CTRL+BACKSPACE → delete entire word & go to previous word
-      if (currentCharIndex > 0) {
-        // delete current word entirely
-        const chars = wordSpan.querySelectorAll('.char');
-        for (let ci = 0; ci < currentCharIndex; ci++) {
-          chars[ci].classList.remove('correct', 'incorrect');
-        }
-        typedChars[currentWordIndex] = [];
-        currentCharIndex = 0;
-      } else if (currentWordIndex > 0) {
-        // move to previous word
-        currentWordIndex--;
-        const prevWordSpan = document.querySelectorAll('.word')[currentWordIndex];
-        const prevWord = flatWords[currentWordIndex];
-        currentCharIndex = typedChars[currentWordIndex].length;
-        // clear previous word fully
-        typedChars[currentWordIndex] = [];
-        prevWordSpan.querySelectorAll('.char').forEach(c => {
-          c.classList.remove('correct', 'incorrect');
-        });
-      }
-    } else {
-      // Normal backspace (single character)
-      if (currentCharIndex > 0) {
-        currentCharIndex--;
-        typedChars[currentWordIndex].pop();
-        chars[currentCharIndex].classList.remove('correct', 'incorrect');
-      }
-    }
-
-    highlightActiveChar();
-    updateLiveStats();
-    return;
-  }
-
-
-    // Normal character typing
-    // Normal character typing
-if (e.key.length === 1) {
-  const char = e.key;
-  const expectedChar = currentWord[currentCharIndex];
-  const charSpan = chars[currentCharIndex];
-  typedChars[currentWordIndex].push(char);
-
-  // Normal character typing
-if (e.key.length === 1 && e.key !== " ") {
-  const char = e.key;
-  const expectedChar = currentWord[currentCharIndex];
-  const charSpan = chars[currentCharIndex];
-  typedChars[currentWordIndex].push(char);
-
-  if (char === expectedChar) {
-    charSpan.classList.add('correct');
-    charSpan.classList.remove('incorrect');
-  } else {
-    charSpan.classList.add('incorrect');
-    charSpan.classList.remove('correct');
-  }
-
-  currentCharIndex++;
-  highlightActiveChar();
-  updateLiveStats();
-
-  // ✅ DO NOT auto-jump here anymore
-}
-
-// SPACE → only then move to next word
-if (e.key === " ") {
-  e.preventDefault();
-
-  // Mark extra spaces as incorrect if pressed too early
-  if (currentCharIndex < currentWord.length) {
-    for (let i = currentCharIndex; i < currentWord.length; i++) {
-      chars[i].classList.add('incorrect');
-    }
-  }
-
-  currentWordIndex++;
-  currentCharIndex = 0;
-  highlightActiveChar();
-  updateLiveStats();
-  return;
-}
-
-
-  
-}
-
-
-    // End test check
-    const isLastWord = currentWordIndex === flatWords.length - 1;
-    const isLastChar = currentCharIndex === currentWord.length;
-    if (isLastWord && isLastChar) {
-      endTest();
-    }
-  });
-
-
-      function startTest(category = "basics") {
-        generateWords(category);
-        renderWords();
-        currentWordIndex = 0;
-        currentCharIndex = 0;
-        startTime = null;
-        testEnded = false;
-        input.value = '';
-        input.disabled = false;
-        input.focus();
-        highlightActiveChar();
-        liveWpmDisplay.textContent = '0';
-        liveAccDisplay.textContent = '0';
-      }
-
-      function loadCategory(category) {
-        startTest(category);
-      }
-
-      redoBtn.addEventListener("click", () => startTest());
-      redoBtn.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") startTest();
-      });
-
-      window.onload = () => startTest("basics");
-      document.body.addEventListener('click', () => input.focus());
-
-    // --- ADD THIS FUNCTION TO SHOW FINAL POPUP ---
-  function showResultPopup(wpm, accuracy) {
-    const modal = document.createElement("div");
-    modal.id = "result-modal";
-    modal.style.position = "fixed";
-    modal.style.top = "0";
-    modal.style.left = "0";
-    modal.style.width = "100%";
-    modal.style.height = "100%";
-    modal.style.background = "rgba(0,0,0,0.8)";
-    modal.style.display = "flex";
-    modal.style.alignItems = "center";
-    modal.style.justifyContent = "center";
-    modal.style.zIndex = "9999";
-
-    modal.innerHTML = `
-      <div style="background:#1e1e1e; color:#FFE8DB; padding:30px; border-radius:12px; text-align:center; max-width:400px;">
-        <h2 style="margin-bottom:15px;">Test Completed</h2>
-        <p><strong>WPM:</strong> ${wpm}</p>
-        <p><strong>Accuracy:</strong> ${accuracy}%</p>
-        <p style="margin:15px 0;">${
-          accuracy >= 90
-            ? "🔥 Excellent work!"
-            : accuracy >= 70
-            ? "Good job, keep improving!"
-            : "Keep practicing, you'll get faster!"
-        }</p>
-        <button id="restart-test" style="margin-top:15px; padding:10px 20px; background:#5682B1; color:#fff; border:none; border-radius:8px; cursor:pointer;">
-          Restart
-        </button>
-      </div>
-    `;
-
-    document.body.appendChild(modal);
-
-    document.getElementById("restart-test").addEventListener("click", () => {
-      document.body.removeChild(modal);
-      startTest();
     });
-  }
 
-  // --- UPDATE endTest() TO SHOW POPUP ---
-  function endTest() {
-    testEnded = true;
-    input.disabled = true;
-    input.blur();
-    const { wpm, accuracy } = calculateStats();
-    showResultPopup(wpm, accuracy);
-  }
 
-  const video = document.getElementById('backgroundVideo');
-  video.playbackRate = 0.8;                //Video speed controls
+    function startTest(category = "basics") {
+      generateWords(category);
+      renderWords();
+      currentWordIndex = 0;
+      currentCharIndex = 0;
+      startTime = null;
+      testEnded = false;
+      input.value = '';
+      input.disabled = false;
+      input.focus();
+      highlightActiveChar();
+      liveWpmDisplay.textContent = '0';
+      liveAccDisplay.textContent = '0';
+    }
 
-    </script>
+    function loadCategory(category) {
+      currentCategory = category;
+      startTest(category);
+    }
 
-  </body>
-  </html>
+    redoBtn.addEventListener("click", () => startTest(currentCategory));
+    redoBtn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") startTest(currentCategory);
+    });
+
+    window.onload = () => startTest("basics");
+    document.body.addEventListener('click', () => input.focus());
+
+    function showResultPopup(wpm, accuracy) {
+      const modal = document.createElement("div");
+      modal.id = "result-modal";
+      modal.style.position = "fixed";
+      modal.style.top = "0";
+      modal.style.left = "0";
+      modal.style.width = "100%";
+      modal.style.height = "100%";
+      modal.style.background = "rgba(0,0,0,0.8)";
+      modal.style.display = "flex";
+      modal.style.alignItems = "center";
+      modal.style.justifyContent = "center";
+      modal.style.zIndex = "9999";
+
+      modal.innerHTML = `
+        <div style="background:#1e1e1e; color:#FFE8DB; padding:30px; border-radius:12px; text-align:center; max-width:400px;">
+          <h2 style="margin-bottom:15px;">Test Completed</h2>
+          <p><strong>WPM:</strong> ${wpm}</p>
+          <p><strong>Accuracy:</strong> ${accuracy}%</p>
+          <p style="margin:15px 0;">${
+            accuracy >= 90
+              ? "🔥 Excellent work!"
+              : accuracy >= 70
+              ? "Good job, keep improving!"
+              : "Keep practicing, you'll get faster!"
+          }</p>
+          <button id="restart-test-btn" style="margin-top:15px; padding:10px 20px; background:#5682B1; color:#fff; border:none; border-radius:8px; cursor:pointer;">
+            Restart
+          </button>
+          <p style="font-size: 12px; color: #888; margin-top: 15px;">or press Shift + Enter</p>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      document.getElementById("restart-test-btn").addEventListener("click", () => {
+        document.body.removeChild(modal);
+        startTest(currentCategory);
+      });
+    }
+
+    // --- ⭐ NEW: Restart test with Shift+Enter from results screen ⭐ ---
+    document.addEventListener('keydown', (e) => {
+        const modal = document.getElementById('result-modal');
+        if (modal && e.shiftKey && e.key === 'Enter') {
+            e.preventDefault();
+            document.body.removeChild(modal);
+            startTest(currentCategory);
+        }
+    });
+    
+    const video = document.getElementById('backgroundVideo');
+    if (video) {
+        video.playbackRate = 0.8; //Video speed controls
+    }
+  </script>
+</body>
+</html>
