@@ -206,8 +206,8 @@
   
   <div id="particle-container"></div>
 
-  <audio id="correct-key-sound" src="media/sample.mp3" preload="auto"></audio>
-  <audio id="incorrect-key-sound" src="media/incorrect1.mp3" preload="auto"></audio>
+  <audio id="correct-key-sound" src="media/Sample_(Die_With_a_Smile).mp3" preload="auto"></audio>
+  <audio id="incorrect-key-sound" src="media/incorrect.mp3" preload="auto"></audio>
 
   <header>
     <a href="index.html" id="Logo">SwiftKeys</a>
@@ -273,7 +273,7 @@
 }
 
 
-  // --- 🎵 Typing Sound Logic ---
+  // --- Typing Sound Logic ---
 let typingTimeout;
 let resumeTimeout;
 
@@ -305,7 +305,7 @@ function handleTypingSound() {
 
   typingTimeout = setTimeout(() => {
     fadeOutAudio(correctKeySound, 700);
-  }, 500); // inactivity delay
+  }, 1000); // inactivity delay
 }
 
 // Handle incorrect typing sound
