@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Git Typing Practice</title>
+  <title>Normal Typing Test</title>
   <link rel="stylesheet" href="style/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
@@ -92,8 +92,9 @@
     #test-box {
       max-width: 80vw;
       width: 100%;
-      text-align: left;
-      font-size: 32px;      
+      text-align: justify;
+      text-justify: inter-word;
+      font-size: 40px;      
       line-height: 2;
       word-wrap: break-word;
       margin-bottom: 20px;
@@ -196,6 +197,21 @@
       will-change: transform, opacity;
       box-shadow: none; 
     }
+
+    .word {
+  margin-right: 15px;
+  white-space: nowrap;
+}
+
+#test-box {
+  word-wrap: normal;
+  overflow-wrap: normal;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+
+
   </style>
 </head>
 
@@ -343,18 +359,40 @@ function handleIncorrectSound() {
 
 
   const categories = {
-    basics: `The quick brown fox jumps over the lazy dog. Let your fingers dance with the music. Each keystroke becomes a note, each word a phrase flowing in harmony with the melody. As you type, lose yourself in the golden glow of sound. Let the beats carry youuntil typing feels less like work and more like creating art with your hands.`,
-    push: `git pull origin main\ngit fetch origin\ngit branch -d feature\ngit branch -D feature\ngit push origin --delete feature`,
-    terminal: `ls\npwd\ncd Desktop\ngit bash\nmkdir directoryName\ntouch index.html\ntouch style.css\ntouch app.js\nrmdir directoryName`,
-    problems: {
-      question: "Q1: Initialize a Git repo and make your first commit.",
-      answer: `git init\ngit add .\ngit commit -m "first commit"`
-    },
-    problems2: {
-      question: "Q2: Create a new branch called 'feature' and push it to remote.",
-      answer: `git checkout -b feature\ngit push origin feature`
-    }
-  };
+  basics: [
+  `let your hands glide like water across the keyboard every tap spreading gentle ripples through your thoughts each motion guiding the next until your words begin to flow like a quiet stream through sound and silence merging into rhythm until even time itself feels soft and slow like breath`,
+  
+  `each word you type becomes a heartbeat in your own hidden melody the rhythm steady and alive carrying you through waves of focus and calm every letter forming another step in this endless dance where the keys are your instrument and your mind drifts in perfect motion`,
+  
+  `feel the letters fall into place like rain striking warm pavement each keystroke soft yet certain the melody of your thoughts turning into patterns on the screen like quiet echoes in the night guiding your hands as though the music itself knows where you need to go`,
+  
+  `typing becomes a quiet meditation each motion effortless yet filled with purpose your fingers tracing invisible paths across a field of rhythm until words blossom into form every sound from the keys building a gentle beat that carries your focus deeper into flow like drifting through light`,
+  
+  `let your breathing match the tempo of the song playing in your mind the steady pulse of creation guiding your rhythm with each letter forming like a spark from the music your thoughts align and the world fades away until there is only sound motion and harmony`,
+  
+  `every keystroke is a story written in rhythm each press connecting thought to motion like waves kissing the shore your focus becomes the tide and your words the foam that lingers when the song ends leaving behind the quiet beauty of something made entirely from feeling`,
+  
+  `typing feels like painting with sound each stroke of the finger creating lines of melody across a canvas of silence as your rhythm grows the letters begin to breathe forming patterns of calm energy that move with you until you realize your thoughts have become music`,
+  
+  `lose yourself in the tempo of creation where sound meets silence in a soft glow of rhythm the world outside fades into blur while your fingers dance across the keys weaving phrases that hum with life every letter a note every word a heartbeat in motion`,
+  
+  `the keyboard becomes your instrument the song of focus your guide and every keystroke a note in your quiet symphony let your hands move as if drawn by the wind each rhythm merging with thought until you no longer type but simply exist inside the music`,
+  
+  `let the music fill your chest and flow through your fingertips as you type every sound of the keys becomes part of the melody of your mind each motion slow yet certain each word falling into place like stars appearing one by one across a midnight sky`
+],
+  
+  push: `git pull origin main\ngit fetch origin\ngit branch -d feature\ngit branch -D feature\ngit push origin --delete feature`,
+  terminal: `ls\npwd\ncd Desktop\ngit bash\nmkdir directoryName\ntouch index.html\ntouch style.css\ntouch app.js\nrmdir directoryName`,
+  problems: {
+    question: "Q1: Initialize a Git repo and make your first commit.",
+    answer: `git init\ngit add .\ngit commit -m "first commit"`
+  },
+  problems2: {
+    question: "Q2: Create a new branch called 'feature' and push it to remote.",
+    answer: `git checkout -b feature\ngit push origin feature`
+  }
+};
+
 
   // --- ⭐ Particle Engine (unchanged) ⭐ ---
   const particleContainer = document.getElementById('particle-container');
@@ -444,18 +482,28 @@ function handleIncorrectSound() {
   // --- End Particle Engine ---
 
   function generateWords(category) {
-    let manualString;
-    const cat = categories[category];
+  let manualString;
+  const cat = categories[category];
 
-    if (typeof cat === "string") {
-      document.getElementById("question-box").textContent = "";
-      manualString = cat;
-    } else if (typeof cat === "object") {
-      document.getElementById("question-box").textContent = cat.question;
-      manualString = cat.answer;
-    }
-    words = manualString.trim().split("\n").filter(line => line.trim() !== "").map(line => line.trim().split(" "));
+  if (Array.isArray(cat)) {
+    // Pick a random string from the array
+    document.getElementById("question-box").textContent = "";
+    manualString = cat[Math.floor(Math.random() * cat.length)];
+  } else if (typeof cat === "string") {
+    document.getElementById("question-box").textContent = "";
+    manualString = cat;
+  } else if (typeof cat === "object") {
+    document.getElementById("question-box").textContent = cat.question;
+    manualString = cat.answer;
   }
+
+  words = manualString
+    .trim()
+    .split("\n")
+    .filter(line => line.trim() !== "")
+    .map(line => line.trim().split(" "));
+}
+
 
   function renderWords() {
     testBox.innerHTML = '';
