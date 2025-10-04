@@ -37,6 +37,10 @@ body {
   font-size: 2rem;
 }
 
+#headlineh4{
+  font-size: 1.5rem;
+}
+
 /* Header */
 header {
   display: flex;
