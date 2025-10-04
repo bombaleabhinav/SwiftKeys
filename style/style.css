@@ -27,10 +27,14 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: transparent;
-  color: black;
+  color: #FFE8DB;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+#headlineh3{
+  font-size: 2rem;
 }
 
 /* Header */
