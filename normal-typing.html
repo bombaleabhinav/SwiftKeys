@@ -571,12 +571,19 @@ function handleIncorrectSound() {
     return { wpm, accuracy };
   }
 
-  function updateLiveStats() {
-    if (testEnded || !startTime) return;
-    const { wpm, accuracy } = calculateStats();
-    liveWpmDisfa.textContent = wpm;
-    liveAccDisplay.textContent = accuracy;
-  }
+let lastUpdate = 0;
+function updateLiveStats() {
+  if (testEnded || !startTime) return;
+  const now = Date.now();
+  if (now - lastUpdate < 200) return; // update every 200ms max
+  lastUpdate = now;
+
+  const { wpm, accuracy } = calculateStats();
+  liveWpmDisplay.textContent = wpm;
+  liveAccDisplay.textContent = accuracy;
+}
+
+
 
   function endTest() {
     if (testEnded) return;
