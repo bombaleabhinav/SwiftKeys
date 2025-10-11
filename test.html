@@ -84,6 +84,9 @@
       /* Now apply the animation to the box-shadow */
       animation: rgb-glow 2.5s linear infinite;
     }
+    #backgroundVideo{
+      filter: contrast(1.5);
+    }
     
     /* Responsive layout */
     @media (max-width: 992px) {
@@ -118,7 +121,7 @@
 
 <body>
   <video autoplay muted loop id="backgroundVideo">
-    <source src="media/index_bg_4.mp4" type="video/mp4" />
+    <source src="media/test_bg.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
 
@@ -176,6 +179,13 @@
         </a>
     </section>
 </main>
+
+<script>
+  const video = document.getElementById('backgroundVideo');
+    if (video) {
+        video.playbackRate = 0.8; //Video speed controls
+    }
+</script>
 
   <footer id="footer">
     Made with &hearts; by <a href="https://github.com/bombaleabhinav">Abhinav</a>
