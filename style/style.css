@@ -140,3 +140,16 @@ main {
     max-width: 200px;
   }
 }
+
+#LinkedIn:hover{
+  color: #5682B1;
+
+}
+
+#Github:hover{
+  color: #5682B1;
+}
+
+#Email:hover{
+  color: #5682B1;
+}
