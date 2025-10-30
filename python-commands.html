@@ -205,24 +205,24 @@
 
   <div id="content">
     <div id="sidebar">
-      <h3>Git Commands</h3>
+      <h3>Python Commands</h3>
       <button onclick="loadCategory('basics')">Basics</button>
-      <button onclick="loadCategory('push')">Pull &amp; feature</button>
+      <button onclick="loadCategory('data_types')">Data Types</button>
       <button onclick="loadCategory('terminal')">Terminal</button>
       
       <h3>Problem Sets</h3>
       <button onclick="loadCategory('problems')">Problem 1</button>
       <button onclick="loadCategory('problems2')">Problem 2</button>
-      <button onclick="loadCategory('branching')">Problem 3</button>
-      <button onclick="loadCategory('merging')">Problem 4</button>
-      <button onclick="loadCategory('rebase')">Problem 5</button>
-      <button onclick="loadCategory('stash')">Problem 6</button>
-      <button onclick="loadCategory('config')">Problem 7</button>
-      <button onclick="loadCategory('remote')">Problem 8</button>
+      <button onclick="loadCategory('problems3')">Problem 3</button>
+      <button onclick="loadCategory('problems4')">Problem 4</button>
+      <button onclick="loadCategory('problems5')">Problem 5</button>
+      <button onclick="loadCategory('problems6')">Problem 6</button>
+      <button onclick="loadCategory('problems7')">Problem 7</button>
+      <button onclick="loadCategory('problems8')">Problem 8</button>
     </div>
 
     <div id="main">
-      <div id="question-box" style="font-size:20px; margin-bottom:15px; text-align:center; color:#FFE8DB;"></div>
+      <div id="question-box" style="font-size:30px; margin-bottom:15px; text-align:center; color:#FFE8DB;"></div>
       <div id="test-box"></div>
       <input type="text" id="input" autofocus />
       <div id="live-stats">
@@ -257,39 +257,94 @@
 
     // Categories (Normal + Problem Sets)
     const categories = {
-      basics: `git init
-git status
-git add .
-git commit -m "first commit"
-git push origin main
-git push -u origin main`,
-      push: `git pull origin main
-git fetch origin
-git branch -d feature
-git branch -D feature
-git push origin --delete feature`,
-      terminal: `ls
-pwd
-cd Desktop
-git bash
-mkdir directoryName
-touch index.html
-touch style.css
-touch app.js
-rmdir directoryName`,
-      // Problem Sets
-      problems: {
-        question: "Q1: Initialize a Git repo and make your first commit.",
-        answer: `git init
-git add .
-git commit -m "first commit"`
-      },
-      problems2: {
-        question: "Q2: Create a new branch called 'feature' and push it to remote.",
-        answer: `git checkout -b feature
-git push origin feature`
-      }
-    };
+  basics: `print("Hello, World!")
+x = "The quick brown fox jumps over the lazy dog"
+print(type(x))
+list1 = []
+for i in range(len(x)):
+  list1.append(i)
+print(list1)`,
+
+  data_types: `name = "Alice"
+age = 25
+height = 5.6
+is_student = True
+fruits = ["apple", "banana", "cherry"]
+person = {"name": "John", "age": 30}
+print(type(name))
+print(fruits[0])
+print(person["age"])`,
+
+  terminal: `python --version
+python script.py
+pip install packageName
+pip list
+pip uninstall packageName
+virtualenv venv
+source venv/bin/activate
+deactivate`,
+
+  problems: {
+    question: "Q1: Print 'Hello, World!' to the screen.",
+    answer: `print("Hello, World!")`
+  },
+  
+  problems2: {
+    question: "Q2: Take two numbers from user input and print their sum.",
+    answer: `a = int(input())
+b = int(input())
+print(a + b)`
+  },
+
+  problems3: {
+    question: "Q3: Find the largest of three numbers.",
+    answer: `a = int(input())
+b = int(input())
+c = int(input())
+print(max(a, b, c))`
+  },
+
+  problems4: {
+    question: "Q4: Check if a number is even or odd.",
+    answer: `n = int(input())
+if n % 2 == 0:
+    print("Even")
+else:
+    print("Odd")`
+  },
+
+  problems5: {
+    question: "Q5: Print all numbers from 1 to 10 using a loop.",
+    answer: `for i in range(1, 11):
+    print(i)`
+  },
+
+  problems6: {
+    question: "Q6: Count the number of vowels in a given string.",
+    answer: `s = input().lower()
+count = 0
+for ch in s:
+    if ch in 'aeiou':
+        count += 1
+print(count)`
+  },
+
+  problems7: {
+    question: "Q7: Reverse a given string.",
+    answer: `s = input()
+print(s[::-1])`
+  },
+
+  problems8: {
+    question: "Q8: Print the factorial of a number.",
+    answer: `n = int(input())
+fact = 1
+for i in range(1, n + 1):
+    fact *= i
+print(fact)`
+  }
+};
+
 
     function generateWords(category) {
       let manualString;
