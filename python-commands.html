@@ -405,7 +405,7 @@ print(fact)`
       }
     }
     
-    // --- ⭐ NEW AND IMPROVED STATS CALCULATION ⭐ ---
+    // ---NEW AND IMPROVED STATS CALCULATION ---
     function calculateStats() {
       if (!startTime) return { wpm: 0, accuracy: 100 };
 
@@ -530,7 +530,7 @@ print(fact)`
           }
           currentCharIndex++;
 
-          // -- End test right after typing the last character ⭐ ---
+          // -- End test right after typing the last character ---
           if (currentWordIndex === flatWords.length - 1 && currentCharIndex === currentWord.length) {
               endTest();
           }
