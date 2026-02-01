@@ -1,6 +1,6 @@
-# ⌨️ SwiftKeys: Speed Testing for Developers
+# SwiftKeys: Speed Testing for Developers
+[![Live Demo](https://img.shields.io/badge/Live-Demo-FFD700?style=for-the-badge&logo=github&logoColor=black)](https://bombaleabhinav.github.io/SwiftKeys/)
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge&logo=github)](https://bombaleabhinav.github.io/SwiftKeys/)
 
 
 **SwiftKeys** is a high-performance, immersive web application designed to help developers and enthusiasts master their typing speed. Unlike traditional typing tests, SwiftKeys focuses on real-world workflows, including terminal commands, Git operations, and programming logic.
@@ -16,6 +16,7 @@
 *   **Git Master**: Practice essential Git commands like `push`, `pull`, `branch`, and `merge`.
 *   **Terminal Pro**: Master bash/shell commands (`ls`, `mkdir`, `pwd`) to increase CLI efficiency.
 *   **Logic Challenges**: Solve real-world scenarios by typing out command sequences for common tasks.
+---
 
 ### Immersive UX/UI
 *   **Dynamic Particle Engine**: Satisfying visual feedback with custom golden particles for correct hits and red alerts for mistakes.
@@ -40,12 +41,9 @@ Color Pallete:
 ## Tech Stack
 
 - **Frontend**: HTML5, Vanilla CSS3 (Custom properties, Flexbox/Grid)
-- **Logic**: Vanilla JavaScript (ES6+)
+- **Logic**: Vanilla JavaScript
 - **Assets**: 
   - Particle Engine: Custom JS implementation
   - Audio: HTML5 Audio API
   - Icons: FontAwesome
-- **Analytics**: Google Tag Manager (gtag.js)
-
----
 
